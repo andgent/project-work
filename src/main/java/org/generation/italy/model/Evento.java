@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
@@ -48,7 +49,10 @@ public class Evento {
 	@Positive(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
 	@Size(min = 0, max = 10000, message = "Il campo \"biglietto\" accetta solo valori compresi tra {min} e {max}!")
 	private float biglietto;
-	
+
+	@Lob
+	private byte[] locandina;
+
 	// Relation
 	@ManyToMany
 	private List<Categoria> categorie;
@@ -121,6 +125,22 @@ public class Evento {
 
 	public void setBiglietto(float biglietto) {
 		this.biglietto = biglietto;
+	}
+
+	public byte[] getLocandina() {
+		return locandina;
+	}
+
+	public void setLocandina(byte[] locandina) {
+		this.locandina = locandina;
+	}
+
+	public List<Categoria> getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(List<Categoria> categorie) {
+		this.categorie = categorie;
 	}
 
 }
