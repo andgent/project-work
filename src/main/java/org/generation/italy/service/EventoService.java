@@ -30,4 +30,11 @@ public class EventoService {
 		return repository.getById(id);
 	}
 
+	public byte[] create(Evento evento) throws IOException{
+        
+        if(evento.getLocandina() != null) {
+            byte[] contentSerialized = newPhoto.getContent().getBytes();
+            photo.setContent(contentSerialized);
+        }
+	
 }

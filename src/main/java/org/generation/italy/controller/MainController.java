@@ -1,13 +1,17 @@
 package org.generation.italy.controller;
 
+import javax.validation.Valid;
+
 import org.generation.italy.model.Evento;
 import org.generation.italy.service.CategoriaService;
 import org.generation.italy.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -22,17 +26,36 @@ public class MainController {
 	private EventoService eventoService;
 	
 	@GetMapping
-	public String list(@ModelAttribute("evento") Evento evento, Model model) {
+	public String eventsList(Model model) {
 	
-		model.addAttribute("list", evento);
+		model.addAttribute("list", eventoService.findAllSortedByName());
 		
 		return "/client/eventList";
 	}
 	
 	@GetMapping("/admin")
-	public String adminlist(Model model) {
+	public String adminEventsList(Model model) {
+		
+		model.addAttribute("list", eventoService.findAllSortedByName());
 		
 		return "/admin/adminEventList";
+	}
+	
+	@GetMapping("/admin/create")
+	public String createEvent(Model model) {
+		
+		model.addAttribute("evento", new Evento());
+		
+		return "/admin/create";
+	}
+	
+	@PostMapping("/admin/create")
+	public String doCreateEvent(@Valid @ModelAttribute("evento")Evento evento, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			return "/admin/create";
+		}
+		eventoService.save(evento);
+		return "redirect:/eventi/admin";
 	}
 	
 }

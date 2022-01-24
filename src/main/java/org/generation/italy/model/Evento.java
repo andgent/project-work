@@ -9,10 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 public class Evento {
@@ -28,6 +31,7 @@ public class Evento {
 
 	private String descrizione;
 
+	@Pattern(regexp = "[^0-9]*", message = "Il campo \"location\" può contenere solo lettere.")
 	@NotEmpty(message = "Il campo \"location\" non può essere vuoto!")
 	private String location;
 
@@ -38,20 +42,20 @@ public class Evento {
 	// @Future(message = "Il campo \"data\" non può presentare valori passati!")
 	private LocalDateTime dataFine;
 
-	@Positive(message = "Il campo \"capienza\" accetta solo numeri interi positivi!")
-	@Size(min = 1, max = 999, message = "Il campo \"capienza\" accetta solo valori compresi tra {min} e {max}!")
+	@Positive(message = "Il campo \"capienza\" accetta solo numeri positivi!")
+	@Max(value = 999, message = "Il campo \"capienza\" accetta come valore massimo 999!")
 	private int capienza;
 
-	@PositiveOrZero(message = "Il campo \"prenotati\" accetta solo numeri interi superiori allo \"0\"!")
-	@Size(min = 0, max = 999, message = "Il campo \"prenotati\" accetta solo valori compresi tra {min} e {max}!")
+	@PositiveOrZero(message = "Il campo \"prenotati\" accetta solo numeri interi superiori allo \"0\" compreso!")
+	@Max(value = 999, message = "Il campo \"prenotati\" accetta solo valori inferiori a 999")
 	private int prenotati;
 
-	@Positive(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
-	@Size(min = 0, max = 10000, message = "Il campo \"biglietto\" accetta solo valori compresi tra {min} e {max}!")
+	@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
+	@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
 	private float biglietto;
 
 	@Lob
-	private byte[] locandina;
+	private MultipartFile locandina;
 
 	// Relation
 	@ManyToMany
@@ -127,20 +131,20 @@ public class Evento {
 		this.biglietto = biglietto;
 	}
 
-	public byte[] getLocandina() {
-		return locandina;
-	}
-
-	public void setLocandina(byte[] locandina) {
-		this.locandina = locandina;
-	}
-
 	public List<Categoria> getCategorie() {
 		return categorie;
 	}
 
 	public void setCategorie(List<Categoria> categorie) {
 		this.categorie = categorie;
+	}
+
+	public MultipartFile getLocandina() {
+		return locandina;
+	}
+
+	public void setLocandina(MultipartFile locandina) {
+		this.locandina = locandina;
 	}
 
 }

@@ -19,6 +19,7 @@
 				<th scope="col">Data di inizio</th>
 				<th scope="col">Data di fine</th>
 				<th scope="col">Prezzo</th>
+				<th scope="col">Comandi</th >
 			</tr>
 		</thead>
 		<tbody>
@@ -32,6 +33,8 @@
 				<td th:text="${item.biglietto}"></td >
 			</tr >
 		</tbody>
+		
     <script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+    <a type="button" th:href="@{/eventi/admin/create}" class="btn btn-primary">Crea un evento</a>
 </body>
 </html>
