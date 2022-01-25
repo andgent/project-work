@@ -17,6 +17,10 @@ public class EventoService {
 	public List<Evento> findAllSortedByName() {
 		return repository.findAll(Sort.by("nome"));
 	}
+	
+	public Evento update(Evento evento) {
+		return repository.save(evento);
+	}
 
 	public Evento save(Evento evento) {
 		return repository.save(evento);
