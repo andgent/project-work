@@ -3,72 +3,45 @@ package org.generation.italy.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.web.multipart.MultipartFile;
 
-@Entity
-public class Evento {
-
-	// Attributes
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class EventoForm {
+	
 
 	@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
 	private String nome;
 
 	private String descrizione;
-
+	
 	/*
 	@Pattern(regexp = "[^0-9]*", message = "Il campo \"location\" può contenere solo lettere.")
 	@NotEmpty(message = "Il campo \"location\" non può essere vuoto!")
 	private String location;
 	*/
 
-	// @FutureOrPresent(message = "Il campo \"data\" non può presentare valori
-	// passati!")
+	// @FutureOrPresent(message = "Il campo \"data\" non può presentare valori passati!")
 	private LocalDateTime dataInizio;
 
 	// @Future(message = "Il campo \"data\" non può presentare valori passati!")
 	private LocalDateTime dataFine;
 
-	/*
 	@Positive(message = "Il campo \"capienza\" accetta solo numeri positivi!")
 	@Max(value = 999, message = "Il campo \"capienza\" accetta come valore massimo 999!")
 	private int capienza;
-	*/
-
-	@PositiveOrZero(message = "Il campo \"prenotati\" accetta solo numeri interi superiori allo \"0\" compreso!")
-	@Max(value = 999, message = "Il campo \"prenotati\" accetta solo valori inferiori a 999")
-	private int prenotati;
 
 	@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
 	@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
 	private float biglietto;
 
-	@Lob
 	private MultipartFile locandina;
 
-	// Relation
-	@ManyToMany
 	private List<Categoria> categorie;
 
-	@ManyToOne
-	private Location location;
 	// Getters and Setters
 
 	public String getNome() {
@@ -103,16 +76,12 @@ public class Evento {
 		this.dataFine = dataFine;
 	}
 
-	public int getPrenotati() {
-		return prenotati;
+	public int getCapienza() {
+		return capienza;
 	}
 
-	public void setPrenotati(int prenotati) {
-		this.prenotati = prenotati;
-	}
-
-	public Integer getId() {
-		return id;
+	public void setCapienza(int capienza) {
+		this.capienza = capienza;
 	}
 
 	public float getBiglietto() {
@@ -138,14 +107,5 @@ public class Evento {
 	public void setLocandina(MultipartFile locandina) {
 		this.locandina = locandina;
 	}
-
-	public Location getLocation() {
-		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-
+	
 }

@@ -2,31 +2,27 @@ package org.generation.italy.service;
 
 import java.util.List;
 
-import org.generation.italy.model.Evento;
-import org.generation.italy.repository.EventoRepository;
+import org.generation.italy.model.Location;
+import org.generation.italy.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventoService {
+public class LocationService {
 
 	@Autowired
-	private EventoRepository repository;
-
-	public List<Evento> findAllSortedByName() {
+	private LocationRepository repository;
+	
+	public List<Location> findAllSortedByName() {
 		return repository.findAll(Sort.by("nome"));
 	}
-
-	public Evento save(Evento evento) {
-		return repository.save(evento);
+	
+	public Location save(Location location) {
+		return repository.save(location);
 	}
 
 	public void deleteById(Integer id) {
 		repository.deleteById(id);
-	}
-
-	public Evento getById(Integer id) {
-		return repository.getById(id);
 	}
 }

@@ -19,20 +19,17 @@
 				<ul>
 					<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
 				</ul>
-			</div >
+			</div>
 		</div>
 		<div class="form-floating">
 			<textarea th:field="*{descrizione}" class="form-control" id="descrizione"></textarea>
 			<label for="descrizione">Descrizione</label>
 		</div>
-		<div class="mb-3">
-			<label for="location" class="form-label">Location</label>
-			<input th:field="*{location}" th:errorClass="is-invalid" type="text" class="form-control" id="location">
-			<div th:if="${#fields.hasErrors('location')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('location')}" th:text="${err}" class="text-danger"></li>
-				</ul>
-			</div >
+		<div class="form-check" th:each="item:${list}">
+			<input class="form-check-input" type="radio" name="flexRadioDefault" th:id="${item.id}"
+				th:value="${item.id}" th:field="*{location}">
+			<label th:text="${item.nome}" class="form-check-label" th:for="${item.id}">
+			</label> 
 		</div>
 		<div class="mb-3">
 			<label for="data-inizio">Data e ora di inizio</label></br>
@@ -43,22 +40,13 @@
 			<input th:field="*{dataFine}" type="datetime-local" id="data-fine">
 		</div>
 		<div class="mb-3">
-			<label for="capienza" class="form-label">Capienza</label>
-			<input th:field="*{capienza}" th:errorClass="is-invalid" type="number" class="form-control" id="capienza">
-			<div th:if="${#fields.hasErrors('capienza')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('capienza')}" th:text="${err}" class="text-danger"></li>
-				</ul>
-			</div >
-		</div>
-		<div class="mb-3">
 			<label for="biglietto" class="form-label">biglietto</label>
 			<input th:field="*{biglietto}" th:errorClass="is-invalid" type="number" class="form-control" id="biglietto">
 			<div th:if="${#fields.hasErrors('biglietto')}" class="invalid-feedback">
 				<ul>
 					<li th:each="err : ${#fields.errors('biglietto')}" th:text="${err}" class="text-danger"></li>
 				</ul>
-			</div >
+			</div>
 		</div>
 		<div class="custom-file">
 			<label class="custom-file-label" for="uploadImg">Seleziona la locandina</label></br>
