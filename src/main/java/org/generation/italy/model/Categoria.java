@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Categoria {
@@ -14,19 +15,11 @@ public class Categoria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	//@NotEmpty(message = "Il campo \"categoria\" non puÃ² essere vuoto!")
-	private String categoria;
+	@NotEmpty(message = "Il campo \"nome\" non può essere vuoto!")
+	private String nome;
 
 	// Getters and Setters
 	
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(String categoria) {
-		this.categoria = categoria;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -34,6 +27,19 @@ public class Categoria {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	
+
+	
+	
+
 	
 }

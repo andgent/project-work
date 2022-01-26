@@ -1,6 +1,7 @@
 package org.generation.italy.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,11 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PositiveOrZero;
 
-import org.springframework.web.multipart.MultipartFile;
+
+
 
 @Entity
 public class Evento {
@@ -25,7 +24,7 @@ public class Evento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@NotEmpty(message = "Il campo \"nome\" Ã¨ obbligatorio!")
+	//@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
 	private String nome;
 
 	private String descrizione;
@@ -49,16 +48,15 @@ public class Evento {
 	private int capienza;
 	*/
 
-	@PositiveOrZero(message = "Il campo \"prenotati\" accetta solo numeri interi superiori allo \"0\" compreso!")
-	@Max(value = 999, message = "Il campo \"prenotati\" accetta solo valori inferiori a 999")
-	private int prenotati;
 
-	@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
-	@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
+
+	//@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
+	//@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
 	private float biglietto;
 
 	@Lob
-	private MultipartFile locandina;
+	private byte[] locandina;
+	
 
 	// Relation
 	@ManyToMany
@@ -104,13 +102,7 @@ public class Evento {
 		this.dataFine = dataFine;
 	}
 
-	public int getPrenotati() {
-		return prenotati;
-	}
 
-	public void setPrenotati(int prenotati) {
-		this.prenotati = prenotati;
-	}
 
 	public Integer getId() {
 		return id;
@@ -132,11 +124,12 @@ public class Evento {
 		this.categorie = categorie;
 	}
 
-	public MultipartFile getLocandina() {
+
+	public byte[] getLocandina() {
 		return locandina;
 	}
 
-	public void setLocandina(MultipartFile locandina) {
+	public void setLocandina(byte[] locandina) {
 		this.locandina = locandina;
 	}
 
@@ -149,4 +142,11 @@ public class Evento {
 	}
 
 
+	public String categorieString() {
+        List<String> categorieNew = new ArrayList<String>();
+        for(Categoria i : categorie) {
+            categorieNew.add(i.getNome());
+        }
+        return String.join(", ", categorieNew);
+    }
 }

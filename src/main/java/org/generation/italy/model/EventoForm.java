@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class EventoForm {
 	
 
-	@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
+	private Integer id;
+	
+	
+	@NotEmpty(message = "Il campo \"nome\" � obbligatorio!")
 	private String nome;
 
 	private String descrizione;
@@ -30,10 +32,6 @@ public class EventoForm {
 	// @Future(message = "Il campo \"data\" non può presentare valori passati!")
 	private LocalDateTime dataFine;
 
-	@Positive(message = "Il campo \"capienza\" accetta solo numeri positivi!")
-	@Max(value = 999, message = "Il campo \"capienza\" accetta come valore massimo 999!")
-	private int capienza;
-
 	@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
 	@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
 	private float biglietto;
@@ -41,6 +39,9 @@ public class EventoForm {
 	private MultipartFile locandina;
 
 	private List<Categoria> categorie;
+	
+	private Location location;
+	
 
 	// Getters and Setters
 
@@ -76,13 +77,6 @@ public class EventoForm {
 		this.dataFine = dataFine;
 	}
 
-	public int getCapienza() {
-		return capienza;
-	}
-
-	public void setCapienza(int capienza) {
-		this.capienza = capienza;
-	}
 
 	public float getBiglietto() {
 		return biglietto;
@@ -106,6 +100,22 @@ public class EventoForm {
 
 	public void setLocandina(MultipartFile locandina) {
 		this.locandina = locandina;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
 	}
 	
 }

@@ -17,7 +17,7 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotEmpty(message = "Il campo \"nome\" Ã¨ obbligatorio!")
+	@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
 	private String nome;
 	
 	@Positive(message = "Il campo \"capienza\" accetta solo numeri interi positivi!")

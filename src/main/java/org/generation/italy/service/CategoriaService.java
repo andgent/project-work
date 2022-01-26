@@ -15,7 +15,7 @@ public class CategoriaService {
 	private CategoriaRepository repository;
 
 	public List<Categoria> findAllSortedByName() {
-		return repository.findAll(Sort.by("categoria"));
+		return repository.findAll(Sort.by("nome"));
 	}
 
 	public Categoria save(Categoria categoria) {

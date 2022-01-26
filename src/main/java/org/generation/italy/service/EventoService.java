@@ -1,8 +1,10 @@
 package org.generation.italy.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.generation.italy.model.Evento;
+import org.generation.italy.model.EventoForm;
 import org.generation.italy.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -18,13 +20,13 @@ public class EventoService {
 		return repository.findAll(Sort.by("nome"));
 	}
 	
-	public Evento update(Evento evento) {
-		return repository.save(evento);
-	}
-
-	public Evento save(Evento evento) {
-		return repository.save(evento);
-	}
+//	public Evento update(Evento evento) {
+//		return repository.save(evento);
+//	}
+//
+//	public Evento save(Evento evento) {
+//		return repository.save(evento);
+//	}
 
 	public void deleteById(Integer id) {
 		repository.deleteById(id);
@@ -33,5 +35,35 @@ public class EventoService {
 	public Evento getById(Integer id) {
 		return repository.getById(id);
 	}
+	
+	public Evento save(EventoForm eventoForm) throws IOException {
+        Evento evento = new Evento();
+        evento.setNome(eventoForm.getNome());
+        evento.setCategorie(eventoForm.getCategorie());
+        evento.setBiglietto(eventoForm.getBiglietto());
+        evento.setDescrizione(eventoForm.getDescrizione());
+        evento.setLocation(eventoForm.getLocation());
+        if(eventoForm.getLocandina() != null) {
+            evento.setLocandina(eventoForm.getLocandina().getBytes());
+        }
+        return repository.save(evento);
+	}
+        
+        public Evento update(EventoForm eventoForm, Evento evento) throws IOException {
+            
+            evento.setNome(eventoForm.getNome());
+            evento.setCategorie(eventoForm.getCategorie());
+            evento.setBiglietto(eventoForm.getBiglietto());
+            evento.setDescrizione(eventoForm.getDescrizione());
+            evento.setLocation(eventoForm.getLocation());
+            if(eventoForm.getLocandina() != null) {
+                evento.setLocandina(eventoForm.getLocandina().getBytes());
+            }
+            return repository.save(evento);
+           
+    }
+	
+	
+	
 	
 }
