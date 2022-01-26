@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
+	<title>Eventi</title>
+</head>
+
+<body>
+	<h1>Crea nuova location</h1>
+	<form id="evento-form" th:object="${location}" th:action="@{/eventi/admin/createLocation}" method="post">
+		<div class="mb-3">
+			<label for="nome" class="form-label">Nome</label>
+			<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="nome">
+			<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
+				<ul>
+					<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
+				</ul>
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="capienza" class="form-label">Capienza</label>
+			<input th:field="*{capienza}" th:errorClass="is-invalid" type="text" class="form-control" id="capienza">
+			<div th:if="${#fields.hasErrors('capienza')}" class="invalid-feedback">
+				<ul>
+					<li th:each="err : ${#fields.errors('capienza')}" th:text="${err}" class="text-danger"></li>
+				</ul>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary">Crea</button>
+		<button type="reset" class="btn btn-primary">Resetta tutti i campi</button>
+		<a type="button" th:href="@{/eventi/admin}" class="btn btn-primary">Torna alla home</a>
+	</form>
+
+	<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

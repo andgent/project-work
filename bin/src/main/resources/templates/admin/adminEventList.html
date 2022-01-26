@@ -30,10 +30,8 @@
 				<td th:text="${item.categorie}"></td >
 				<td th:text="${item.dataInizio}"></td >
 				<td th:text="${item.dataFine}"></td >
-				<td th:text="${item.biglietto}">
-				<td><a type="button" th:href="@{|/eventi/admin/edit/${item.id}|}">Modifica</a  >
-				<a type="button" th:href="@{|/eventi/admin/delete/${item.id}|}" onclick="return confirm('Sei sicuro?')">Elimina</a></td >
-
+				<td th:text="${item.biglietto}"></td >
+				<td><a type="button" th:href="@{|/eventi/admin/edit/${item.id}|}">Modifica</a ></td>
 			</tr >
 		</tbody>
 		

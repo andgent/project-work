@@ -10,11 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -73,6 +70,10 @@ public class Evento {
 
 	public String getNome() {
 		return nome;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public void setNome(String nome) {

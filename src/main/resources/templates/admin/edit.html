@@ -10,10 +10,10 @@
 </head>
 
 <body>
-	<h1>Crea il tuo evento</h1>
+	<h1>Modifica il tuo evento</h1>
 	<form id="evento-form" 
 	th:object="${evento}" 
-	th:action="@{/eventi/admin/create}"
+	th:action="@{/eventi/admin/edit/{id}(id=${evento.id})}"
 	 method="post">
 		<div class="mb-3">
 			<label for="nome" class="form-label">Nome</label>
@@ -55,7 +55,7 @@
 			<label class="custom-file-label" for="uploadImg">Seleziona la locandina</label></br>
 			<input type="file" class="custom-file-input m-2" id="uploadImg">
 		</div>
-		<button type="submit" class="btn btn-primary">Crea</button>
+		<button type="submit" class="btn btn-primary">Salva</button>
 		<button type="reset" class="btn btn-primary">Resetta tutti i campi</button>
 		<a type="button" th:href="@{/eventi/admin}" class="btn btn-primary">Torna alla home</a>
 	</form>
@@ -64,7 +64,3 @@
 </body>
 
 </html>
-
-
-
-
