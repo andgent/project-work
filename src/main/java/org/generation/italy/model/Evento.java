@@ -25,7 +25,7 @@ public class Evento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	//@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
+	//@NotEmpty(message = "Il campo \"nome\" ï¿½ obbligatorio!")
 	private String nome;
 
 	private String descrizione;
@@ -48,8 +48,6 @@ public class Evento {
 	@Max(value = 999, message = "Il campo \"capienza\" accetta come valore massimo 999!")
 	private int capienza;
 	*/
-
-
 
 	//@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
 	//@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
@@ -166,6 +164,17 @@ public class Evento {
 		  return dateString; 
 	  }
 
-	
+	// riporta un eventoForm a partire da un evento
+		public EventoForm toEventoForm() {
+			EventoForm eventoForm = new EventoForm();
+			eventoForm.setId(id);
+			eventoForm.setCategorie(categorie);
+			eventoForm.setBiglietto(biglietto);
+			eventoForm.setDataFine(fineToString());
+			eventoForm.setDataInizio(inizioToString());
+			eventoForm.setDescrizione(descrizione);
+			eventoForm.setNome(nome);
+			return eventoForm;
+		}
 	
 }

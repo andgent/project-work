@@ -1,6 +1,7 @@
 package org.generation.italy.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/eventi")
@@ -62,17 +64,31 @@ public class MainController {
 
 	@PostMapping("/admin/create")
 	public String doCreateEvent(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
-			Model model) {
+			Model model, RedirectAttributes redirectAttributes) {
+		
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("listLoc", locationService.findAllSortedByName());
-			model.addAttribute("listCat", categoriaService.findAllSortedByName());
+			ritornoErrori(model);
 			model.addAttribute("edit", false);
 			return "/admin/create";
 		}
+		
+		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Le date inserite no vanno bene!");
+			ritornoErrori(model);
+			model.addAttribute("edit", false);
+			return "redirect:/eventi/admin/create";
+		}
+		
+		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm)) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Location già occupata in questa data!");
+			ritornoErrori(model);
+			model.addAttribute("edit", false);
+			return "redirect:/eventi/admin/create";
+		}
+		
 		try {
 			eventoService.save(eventoForm);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "redirect:/eventi/admin";
@@ -82,27 +98,38 @@ public class MainController {
 	@GetMapping("/admin/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		model.addAttribute("edit", true);
-		model.addAttribute("eventoForm", eventoService.getById(id));
-		model.addAttribute("listLoc", locationService.findAllSortedByName());
-		model.addAttribute("listCat", categoriaService.findAllSortedByName());
+		model.addAttribute("eventoForm",new EventoForm());
+		model.addAttribute("eventoId",id);
+		ritornoErrori(model);
 		return "/admin/create";
 	}
 
 	@PostMapping("/admin/edit/{id}")
 	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
-			@PathVariable("id") Integer id, Model model) {
+			@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("eventoForm", eventoService.getById(id));
-			model.addAttribute("listLoc", locationService.findAllSortedByName());
-			model.addAttribute("listCat", categoriaService.findAllSortedByName());
+			ritornoErrori(model);
 			model.addAttribute("edit", true);
 			return "/admin/create";
+		}
+		
+		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Le date inserite no vanno bene!");
+			ritornoErrori(model);
+			model.addAttribute("edit", true);
+			return "redirect:/eventi/admin/create";
+		}
+		
+		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm, id)) {
+			redirectAttributes.addFlashAttribute("errorMessage", "Location già occupata in questa data!");
+			ritornoErrori(model);
+			model.addAttribute("edit", true);
+			return "redirect:/eventi/admin/create";
 		}
 
 		try {
 			eventoService.update(eventoForm, eventoService.getById(id));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "redirect:/eventi/admin";
@@ -165,6 +192,11 @@ public class MainController {
 	public String doDeleteCat(@PathVariable("id") Integer id) {
 		categoriaService.deleteById(id);
 		return "redirect:/eventi/admin/createCategory";
+	}
+	
+	private void ritornoErrori(Model model) {
+		model.addAttribute("listLoc", locationService.findAllSortedByName());
+		model.addAttribute("listCat", categoriaService.findAllSortedByName());
 	}
 
 }

@@ -21,13 +21,56 @@ public class EventoService {
 		return repository.findAll(Sort.by("nome"));
 	}
 	
-//	public Evento update(Evento evento) {
-//		return repository.save(evento);
-//	}
-//
-//	public Evento save(Evento evento) {
-//		return repository.save(evento);
-//	}
+	public boolean isValidLocation(List<Evento> eventList, EventoForm form) {
+		boolean ok;
+		for(Evento evento:eventList) {
+			
+			if(evento.getLocation() == form.getLocation()) {
+				ok = isValidData(evento.getDataInizio(),evento.getDataFine(),LocalDateTime.parse(form.getDataInizio()),LocalDateTime.parse(form.getDataFine()));
+				if(!ok) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	// controllo se ci sono eventi con la stessa location
+	public boolean isValidLocation(List<Evento> eventList, EventoForm form, Integer id) {
+		boolean ok;
+		for(Evento evento:eventList) {
+			if(evento.getId() != id) {
+				if(evento.getLocation() == form.getLocation()) {
+					ok = isValidData(evento.getDataInizio(),evento.getDataFine(),LocalDateTime.parse(form.getDataInizio()),LocalDateTime.parse(form.getDataFine()));
+					if(!ok) {
+						return true;
+					}
+				}
+			}
+			
+		}
+		return false;
+	}
+	
+	
+	// controllo se in una stessa location 2 eventi si sovrappongono
+	public boolean isValidData(LocalDateTime dataInizio1, LocalDateTime dataFine1, LocalDateTime dataInizio2, LocalDateTime dataFine2) {
+		if(dataInizio1.isAfter(dataFine2)) {
+			return true;
+		}else if(dataInizio2.isAfter(dataFine1)) {
+			return true;
+		}
+		return false;
+	}
+	
+	//controllo se la data di fine è dopo la data di inizio
+	public boolean isValidData(LocalDateTime dataInizio, LocalDateTime dataFine) {
+		if(dataInizio.isAfter(dataFine)) {
+			return true;
+		}
+		return false;
+	}
+	
 
 	public void deleteById(Integer id) {
 		repository.deleteById(id);
@@ -36,6 +79,7 @@ public class EventoService {
 	public Evento getById(Integer id) {
 		return repository.getById(id);
 	}
+	
 	
 	public Evento save(EventoForm eventoForm) throws IOException {
         Evento evento = new Evento();
@@ -46,7 +90,6 @@ public class EventoService {
         evento.setLocation(eventoForm.getLocation());
         evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
         evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
-
         if(eventoForm.getLocandina() != null) {
             evento.setLocandina(eventoForm.getLocandina().getBytes());
         }
@@ -62,7 +105,6 @@ public class EventoService {
             evento.setLocation(eventoForm.getLocation());
             evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
             evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
-
             if(eventoForm.getLocandina() != null) {
                 evento.setLocandina(eventoForm.getLocandina().getBytes());
             }

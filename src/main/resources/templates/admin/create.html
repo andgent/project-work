@@ -16,9 +16,8 @@
 	
 	</div >
 	
-	
 	<form id="evento-form" th:object="${eventoForm}"
-		th:action="${edit} ? @{/eventi/admin/edit/{id}(id=${eventoForm.id})} : @{/eventi/admin/create}" method="post"
+		th:action="${edit} ? @{/eventi/admin/edit/{id}(id=${eventoId})} : @{/eventi/admin/create}" method="post"
 		enctype="multipart/form-data">
 
 
@@ -48,18 +47,19 @@
 					</select>
 				</div>
 
-				<div class="row">
+				
 					<div class="mb-3 col-2">
 						<label for="data-inizio">Data e ora di inizio</label></br>
 						<input th:field="*{dataInizio}" type="datetime-local" id="data-inizio">
 					</div>
+					
 					<div class="mb-3 col-2">
 						<label for="data-fine">Data e ora di fine</label></br>
 						<input th:field="*{dataFine}" type="datetime-local" id="data-fine">
 					</div>
-
-				</div>
-
+					<ul th:each="err : ${errorMessage}">
+    					<li th:text="${err}" class="text-danger" />
+    				</ul>
 
 				<div class="mb-3 col-3">
 					<label for="biglietto" class="form-label">Biglietto</label>
