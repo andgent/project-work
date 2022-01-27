@@ -1,6 +1,7 @@
 package org.generation.italy.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.generation.italy.model.Evento;
@@ -43,6 +44,9 @@ public class EventoService {
         evento.setBiglietto(eventoForm.getBiglietto());
         evento.setDescrizione(eventoForm.getDescrizione());
         evento.setLocation(eventoForm.getLocation());
+        evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
+        evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
+
         if(eventoForm.getLocandina() != null) {
             evento.setLocandina(eventoForm.getLocandina().getBytes());
         }
@@ -56,6 +60,9 @@ public class EventoService {
             evento.setBiglietto(eventoForm.getBiglietto());
             evento.setDescrizione(eventoForm.getDescrizione());
             evento.setLocation(eventoForm.getLocation());
+            evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
+            evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
+
             if(eventoForm.getLocandina() != null) {
                 evento.setLocandina(eventoForm.getLocandina().getBytes());
             }

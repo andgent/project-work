@@ -147,13 +147,13 @@ public class MainController {
 	}
 
 	// delete
-	@GetMapping("admin/delete/{id}")
+	@GetMapping("/admin/delete/{id}")
 	public String doDelete(@PathVariable("id") Integer id) {
 		eventoService.deleteById(id);
 		return "redirect:/eventi/admin";
 	}
 
-	@GetMapping("admin/delete/loc/{id}")
+	@GetMapping("/admin/delete/loc/{id}")
 	public String doDeleteLoc(@PathVariable("id") Integer id) {
 		locationService.deleteById(id);
 		return "redirect:/eventi/admin/createLocation";
@@ -161,7 +161,7 @@ public class MainController {
 	}
 	
 
-	@GetMapping("admin/delete/cat/{id}")
+	@GetMapping("/admin/delete/cat/{id}")
 	public String doDeleteCat(@PathVariable("id") Integer id) {
 		categoriaService.deleteById(id);
 		return "redirect:/eventi/admin/createCategory";

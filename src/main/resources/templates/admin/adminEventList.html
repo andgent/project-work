@@ -33,8 +33,8 @@
 				<th th:text="${item.nome}"></th>
 				<td th:text="${item.location.getNome()}"></td>
 				<td th:text="${item.categorieString()}"></td>
-				<td th:text="${item.dataInizio}"></td>
-				<td th:text="${item.dataFine}"></td>
+				<td th:text="${item.inizioToString()}"></td>
+				<td th:text="${item.fineToString()}"></td>
 				<td th:text="${item.biglietto}">
 				<td><a type="button" th:href="@{|/eventi/admin/edit/${item.id}|}">Modifica</a>
 				<a type="button" th:href="@{|/eventi/admin/delete/${item.id}|}"

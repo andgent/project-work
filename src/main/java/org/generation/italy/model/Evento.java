@@ -1,6 +1,7 @@
 package org.generation.italy.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,4 +150,22 @@ public class Evento {
         }
         return String.join(", ", categorieNew);
     }
+	
+	
+	public String inizioToString() { 
+		  String dateString; 
+		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		   dateString = dataInizio.format(formatter);
+		  return dateString; 
+	  }
+	  
+	  public String fineToString() { 
+		  String dateString; 
+		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		   dateString = dataFine.format(formatter);
+		  return dateString; 
+	  }
+
+	
+	
 }

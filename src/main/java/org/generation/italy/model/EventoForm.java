@@ -1,6 +1,5 @@
 package org.generation.italy.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.Max;
@@ -27,10 +26,12 @@ public class EventoForm {
 	*/
 
 	// @FutureOrPresent(message = "Il campo \"data\" non può presentare valori passati!")
-	private LocalDateTime dataInizio;
+	
+	private String dataInizio;
 
 	// @Future(message = "Il campo \"data\" non può presentare valori passati!")
-	private LocalDateTime dataFine;
+	
+	private String dataFine;
 
 	@PositiveOrZero(message = "Il campo \"biglietto\" accetta solo numeri interi positivi!")
 	@Max(value = 10000, message = "Il campo \"biglietto\" accetta solo valori inferiori a 10'000!")
@@ -61,22 +62,21 @@ public class EventoForm {
 		this.descrizione = descrizione;
 	}
 
-	public LocalDateTime getDataInizio() {
+	public String getDataInizio() {
 		return dataInizio;
 	}
 
-	public void setDataInizio(LocalDateTime dataInizio) {
+	public void setDataInizio(String dataInizio) {
 		this.dataInizio = dataInizio;
 	}
 
-	public LocalDateTime getDataFine() {
+	public String getDataFine() {
 		return dataFine;
 	}
 
-	public void setDataFine(LocalDateTime dataFine) {
+	public void setDataFine(String dataFine) {
 		this.dataFine = dataFine;
 	}
-
 
 	public float getBiglietto() {
 		return biglietto;
@@ -117,5 +117,7 @@ public class EventoForm {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+	
+	
 	
 }
