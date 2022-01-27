@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.validation.Valid;
 
 import org.generation.italy.model.Categoria;
-import org.generation.italy.model.Evento;
 import org.generation.italy.model.EventoForm;
 import org.generation.italy.model.Location;
 import org.generation.italy.service.CategoriaService;
@@ -28,30 +27,30 @@ public class MainController {
 
 	@Autowired
 	private CategoriaService categoriaService;
-	
+
 	@Autowired
 	private EventoService eventoService;
-	
+
 	@Autowired
 	private LocationService locationService;
-	
+
 	@GetMapping
 	public String eventsList(Model model) {
-	
-		model.addAttribute("list", eventoService.findAllSortedByName());
-		
+		model.addAttribute("listCat", categoriaService.findAllSortedByName());
+		model.addAttribute("listEve", eventoService.findAllSortedByName());
+
 		return "/client/eventList";
 	}
-	
-	//lista eventi
+
+	// lista eventi
 	@GetMapping("/admin")
 	public String adminEventsList(Model model) {
 		model.addAttribute("listCat", categoriaService.findAllSortedByName());
-		model.addAttribute("listEve", eventoService.findAllSortedByName());		
+		model.addAttribute("listEve", eventoService.findAllSortedByName());
 		return "/admin/adminEventList";
 	}
-	
-	//creazione evento
+
+	// creazione evento
 	@GetMapping("/admin/create")
 	public String createEvent(Model model) {
 		model.addAttribute("edit", false);
@@ -60,10 +59,11 @@ public class MainController {
 		model.addAttribute("eventoForm", new EventoForm());
 		return "/admin/create";
 	}
-	
+
 	@PostMapping("/admin/create")
-	public String doCreateEvent(@Valid @ModelAttribute("eventoForm")EventoForm eventoForm, BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
+	public String doCreateEvent(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
 			model.addAttribute("listLoc", locationService.findAllSortedByName());
 			model.addAttribute("listCat", categoriaService.findAllSortedByName());
 			model.addAttribute("edit", false);
@@ -77,7 +77,8 @@ public class MainController {
 		}
 		return "redirect:/eventi/admin";
 	}
-	
+
+	// edita evento
 	@GetMapping("/admin/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		model.addAttribute("edit", true);
@@ -86,17 +87,18 @@ public class MainController {
 		model.addAttribute("listCat", categoriaService.findAllSortedByName());
 		return "/admin/create";
 	}
-	
+
 	@PostMapping("/admin/edit/{id}")
-	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult, @PathVariable("id") Integer id, Model model){
-		if(bindingResult.hasErrors()) {
+	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
+			@PathVariable("id") Integer id, Model model) {
+		if (bindingResult.hasErrors()) {
 			model.addAttribute("eventoForm", eventoService.getById(id));
 			model.addAttribute("listLoc", locationService.findAllSortedByName());
 			model.addAttribute("listCat", categoriaService.findAllSortedByName());
 			model.addAttribute("edit", true);
 			return "/admin/create";
 		}
-		
+
 		try {
 			eventoService.update(eventoForm, eventoService.getById(id));
 		} catch (IOException e) {
@@ -105,43 +107,64 @@ public class MainController {
 		}
 		return "redirect:/eventi/admin";
 	}
-	
-	// creazione locaton
+
+	// creazione location
 	@GetMapping("/admin/createLocation")
 	public String createLocation(Model model) {
 		model.addAttribute("location", new Location());
+		model.addAttribute("listLoc", locationService.findAllSortedByName());
 		return "/admin/createLocation";
 	}
-	
+
 	@PostMapping("/admin/createLocation")
-	public String doCreateLocation(@Valid @ModelAttribute("location")Location location, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+	public String doCreateLocation(@Valid @ModelAttribute("location") Location location, BindingResult bindingResult,
+			Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("listLoc", locationService.findAllSortedByName());
 			return "/admin/createLocation";
 		}
 		locationService.save(location);
 		return "redirect:/eventi/admin";
 	}
-	
+
+	// crea categoria
 	@GetMapping("/admin/createCategory")
 	public String createCategoria(Model model) {
+		model.addAttribute("listCat", categoriaService.findAllSortedByName());
 		model.addAttribute("categoria", new Categoria());
 		return "/admin/createCategory";
 	}
-	
+
 	@PostMapping("/admin/createCategory")
-	public String doCreateCategoria(@Valid @ModelAttribute("categoria")Categoria categoria, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+	public String doCreateCategoria(@Valid @ModelAttribute("categoria") Categoria categoria,
+			BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("listCat", categoriaService.findAllSortedByName());
 			return "/admin/createCategory";
 		}
 		categoriaService.save(categoria);
 		return "redirect:/eventi/admin";
 	}
-	
-	
+
+	// delete
 	@GetMapping("admin/delete/{id}")
 	public String doDelete(@PathVariable("id") Integer id) {
 		eventoService.deleteById(id);
 		return "redirect:/eventi/admin";
+	}
+
+	@GetMapping("admin/delete/loc/{id}")
+	public String doDeleteLoc(@PathVariable("id") Integer id) {
+		locationService.deleteById(id);
+		return "redirect:/eventi/admin/createLocation";
+		
+	}
+	
+
+	@GetMapping("admin/delete/cat/{id}")
+	public String doDeleteCat(@PathVariable("id") Integer id) {
+		categoriaService.deleteById(id);
+		return "redirect:/eventi/admin/createCategory";
 	}
 
 }
