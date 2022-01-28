@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,26 +65,20 @@ public class MainController {
 
 	@PostMapping("/admin/create")
 	public String doCreateEvent(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
-			Model model, RedirectAttributes redirectAttributes) {
+			Model model) {
+		
+		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
+			bindingResult.addError(new ObjectError("dataInizio", "Le date inserite no vanno bene!"));
+		}
+		
+		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm)) {
+			bindingResult.addError(new ObjectError("dataInizio", "Location già occupata in questa data!"));
+		}
 		
 		if (bindingResult.hasErrors()) {
 			ritornoErrori(model);
 			model.addAttribute("edit", false);
 			return "/admin/create";
-		}
-		
-		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Le date inserite no vanno bene!");
-			ritornoErrori(model);
-			model.addAttribute("edit", false);
-			return "redirect:/eventi/admin/create";
-		}
-		
-		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Location già occupata in questa data!");
-			ritornoErrori(model);
-			model.addAttribute("edit", false);
-			return "redirect:/eventi/admin/create";
 		}
 		
 		try {
@@ -98,8 +93,7 @@ public class MainController {
 	@GetMapping("/admin/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		model.addAttribute("edit", true);
-		model.addAttribute("eventoForm",new EventoForm());
-		model.addAttribute("eventoId",id);
+		model.addAttribute("eventoForm",eventoService.getById(id));
 		ritornoErrori(model);
 		return "/admin/create";
 	}
@@ -107,26 +101,21 @@ public class MainController {
 	@PostMapping("/admin/edit/{id}")
 	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
 			@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+		
+		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
+			bindingResult.addError(new ObjectError("dataInizio", "Le date inserite no vanno bene!"));
+		}
+		
+		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm, id)) {
+			bindingResult.addError(new ObjectError("dataInizio", "Location già occupata in questa data!"));
+		}
+		
 		if (bindingResult.hasErrors()) {
 			ritornoErrori(model);
 			model.addAttribute("edit", true);
 			return "/admin/create";
 		}
 		
-		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Le date inserite no vanno bene!");
-			ritornoErrori(model);
-			model.addAttribute("edit", true);
-			return "redirect:/eventi/admin/create";
-		}
-		
-		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm, id)) {
-			redirectAttributes.addFlashAttribute("errorMessage", "Location già occupata in questa data!");
-			ritornoErrori(model);
-			model.addAttribute("edit", true);
-			return "redirect:/eventi/admin/create";
-		}
-
 		try {
 			eventoService.update(eventoForm, eventoService.getById(id));
 		} catch (IOException e) {

@@ -21,6 +21,7 @@
 				<th scope="col">Data di inizio</th>
 				<th scope="col">Data di fine</th>
 				<th scope="col">Prezzo</th>
+				<th scope="col">Prenota</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -32,6 +33,7 @@
 				<td th:text="${item.dataInizio}"></td>
 				<td th:text="${item.dataFine}"></td>
 				<td th:text="${item.biglietto}">
+				<td><a th:text="prenota" th:href="@{|/prenota/${item.id}|}"></a></td>
 			</tr>
 				
 				

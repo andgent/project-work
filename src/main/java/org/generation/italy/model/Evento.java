@@ -149,7 +149,7 @@ public class Evento {
         return String.join(", ", categorieNew);
     }
 	
-	
+	// da data a stringa
 	public String inizioToString() { 
 		  String dateString; 
 		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");

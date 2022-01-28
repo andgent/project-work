@@ -12,12 +12,13 @@
 
 	<div class="m-3">
 	
-	<h1>Crea il tuo evento</h1>
+	<h1 th:if="${edit}">Modifica l'evento</h1 >
+	<h1 th:unless="${edit}">Crea l'evento</h1 >
 	
 	</div >
 	
 	<form id="evento-form" th:object="${eventoForm}"
-		th:action="${edit} ? @{/eventi/admin/edit/{id}(id=${eventoId})} : @{/eventi/admin/create}" method="post"
+		th:action="${edit} ? @{/eventi/admin/edit/{id}(id=${eventoForm.id})} : @{/eventi/admin/create}" method="post"
 		enctype="multipart/form-data">
 
 
@@ -65,9 +66,6 @@
 					<label for="biglietto" class="form-label">Biglietto</label>
 					<input th:field="*{biglietto}" th:errorClass="is-invalid" type="number" class="form-control"
 						id="biglietto">
-						
-						
-						
 					<div th:if="${#fields.hasErrors('biglietto')}" class="invalid-feedback">
 						<ul>
 							<li th:each="err : ${#fields.errors('biglietto')}" th:text="${err}" class="text-danger">
@@ -108,7 +106,7 @@
 		</div>
 		
 		<div class="m-3">
-		<button type="submit" class="btn btn-primary">Crea</button>
+		<button type="submit" class="btn btn-primary">Salva</button>
 		<button type="reset" class="btn btn-primary">Resetta tutti i campi</button>
 		</div >
 		
