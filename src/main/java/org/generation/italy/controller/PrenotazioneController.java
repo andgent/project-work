@@ -38,9 +38,14 @@ public class PrenotazioneController {
 	@PostMapping("/{eventoId}")
 	public String doPrenota(Model model,@Valid @ModelAttribute("prenotazione") Prenotazione prenotazione, BindingResult bindingResult, @PathVariable("eventoId") Integer id) {
 		prenotazione.setEvento(eventoService.getById(id));
+		prenotazione.setDataPrenotazione(LocalDateTime.now());
 		
 		if(!prenotazioneService.isValidPrenota(prenotazione)) {
 			bindingResult.addError(new ObjectError("numeroPrenotati", "Impossibile prenotare più biglietti di quanti siano disponibili!"));
+		}
+		
+		if(!prenotazioneService.isValidTime(prenotazione)) {
+			bindingResult.addError(new ObjectError("dataPrenotazione", "Impossibile prenotare un evento imminente!"));
 		}
 		
 		if (bindingResult.hasErrors()) {
@@ -48,9 +53,6 @@ public class PrenotazioneController {
 			return "/client/prenotazione";
 		}
 		
-		prenotazione.setDataPrenotazione(LocalDateTime.now());
-		
-
 		prenotazioneService.save(prenotazione);
 		return "redirect:/eventi";
 	}

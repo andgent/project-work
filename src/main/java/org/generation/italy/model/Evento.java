@@ -56,6 +56,12 @@ public class Evento {
 	@Lob
 	private byte[] locandina;
 	
+	private boolean pubblicato;
+	
+	private boolean annullato;
+	
+	private boolean modificato;
+	
 
 	// Relation
 	@ManyToMany
@@ -175,6 +181,30 @@ public class Evento {
 			eventoForm.setDescrizione(descrizione);
 			eventoForm.setNome(nome);
 			return eventoForm;
+		}
+
+		public boolean isPubblicato() {
+			return pubblicato;
+		}
+
+		public void setPubblicato(boolean pubblicato) {
+			this.pubblicato = pubblicato;
+		}
+
+		public boolean isAnnullato() {
+			return annullato;
+		}
+
+		public void setAnnullato(boolean annullato) {
+			this.annullato = annullato;
+		}
+
+		public boolean isModificato() {
+			return modificato;
+		}
+
+		public void setModificato(boolean modificato) {
+			this.modificato = modificato;
 		}
 	
 }

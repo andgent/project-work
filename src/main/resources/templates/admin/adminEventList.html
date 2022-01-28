@@ -11,10 +11,15 @@
 <body>
 	<h1>Eventi</h1>
 
+		<!-- success message -->
+	<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${message != null}">
+		<span th:text="${message}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
 
 
 
-	<table class="table" th:object="${evento}">
+	<table class="table">
 		<thead>
 			<tr>
 				<th scope="col">Id</th>
@@ -38,7 +43,10 @@
 				<td th:text="${item.biglietto}">
 				<td><a type="button" th:href="@{|/eventi/admin/edit/${item.id}|}">Modifica</a>
 				<a type="button" th:href="@{|/eventi/admin/delete/${item.id}|}"
-						onclick="return confirm('Sei sicuro?')">Elimina</a></td>
+						onclick="return confirm('Sei sicuro?')">Elimina</a>
+				<a th:unless="${item.pubblicato}" type="button" th:href="@{|/eventi/admin/pubblica/${item.id}|}">Pubblica</a>
+				<a th:if="${item.pubblicato}" th:unless="${item.annullato}" type="button" th:href="@{|/eventi/admin/annulla/${item.id}|}">Annulla</a>
+				</td>
 
 			</tr>
 		</tbody>

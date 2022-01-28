@@ -1,6 +1,7 @@
 package org.generation.italy.service;
 
 
+import org.generation.italy.model.Evento;
 import org.generation.italy.model.Prenotazione;
 import org.generation.italy.repository.PrenotazioneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +28,29 @@ public class PrenotazioneService {
 	}
 
 	public boolean isValidPrenota(Prenotazione prenotazione) {
-		
-		int capienza = prenotazione.getEvento().getLocation().getCapienza();
-		int occupati = 0;
-		for (Prenotazione p : repository.findByEvento(prenotazione.getEvento().getId())) {
-			occupati += p.getNumeroPrenotati();
-		}
-		
-		if(capienza - occupati >= prenotazione.getNumeroPrenotati()) {
+		if(calcolaPosti(prenotazione.getEvento()) >= prenotazione.getNumeroPrenotati()) {
 			return true;
 		}
 		
 		return false;
+	}
+	
+	public boolean isValidTime(Prenotazione prenotazione) {
+		if(prenotazione.getDataPrenotazione().plusDays(1).isBefore(prenotazione.getEvento().getDataInizio())) {
+			return true;
+		}
+		return false;
+	}
+	
+	//calcolo posti disponibili
+	public int calcolaPosti(Evento evento) {
+		int capienza = evento.getLocation().getCapienza();
+		int occupati=0;
+		
+		for (Prenotazione p : repository.findByEvento(evento.getId())) {
+			occupati += p.getNumeroPrenotati();
+		}
+		return capienza-occupati;
 	}
 	
 }

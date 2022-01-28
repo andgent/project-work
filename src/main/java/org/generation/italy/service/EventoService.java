@@ -21,6 +21,10 @@ public class EventoService {
 		return repository.findAll(Sort.by("nome"));
 	}
 	
+	public List<Evento> findByKeyword(String keyword){
+		return repository.findByNomeContainingIgnoreCase(keyword);
+	}
+	
 	public boolean isValidLocation(List<Evento> eventList, EventoForm form) {
 		boolean ok;
 		for(Evento evento:eventList) {
@@ -71,6 +75,9 @@ public class EventoService {
 		return false;
 	}
 	
+	public Evento save(Evento evento) {
+		return repository.save(evento);
+	}
 
 	public void deleteById(Integer id) {
 		repository.deleteById(id);
@@ -90,14 +97,20 @@ public class EventoService {
         evento.setLocation(eventoForm.getLocation());
         evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
         evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
+        evento.setModificato(false);
+        evento.setAnnullato(false);
+        evento.setPubblicato(false);
         if(eventoForm.getLocandina() != null) {
             evento.setLocandina(eventoForm.getLocandina().getBytes());
         }
         return repository.save(evento);
 	}
-        
+	
+        //modifica evento
         public Evento update(EventoForm eventoForm, Evento evento) throws IOException {
-            
+            if(evento.isPubblicato()) {
+            	evento.setModificato(true);
+            }
             evento.setNome(eventoForm.getNome());
             evento.setCategorie(eventoForm.getCategorie());
             evento.setBiglietto(eventoForm.getBiglietto());

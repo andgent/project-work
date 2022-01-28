@@ -2,15 +2,16 @@ package org.generation.italy.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.Valid;
 
-import org.generation.italy.model.Categoria;
+import org.generation.italy.model.Evento;
 import org.generation.italy.model.EventoForm;
-import org.generation.italy.model.Location;
 import org.generation.italy.service.CategoriaService;
 import org.generation.italy.service.EventoService;
 import org.generation.italy.service.LocationService;
+import org.generation.italy.service.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -36,13 +38,39 @@ public class MainController {
 
 	@Autowired
 	private LocationService locationService;
+	
+	@Autowired
+	private PrenotazioneService prenotazioneService;
 
+	/*
+	 * @GetMapping public String eventsList(Model
+	 * model, @RequestParam(name="keyword", required=false) String keyword) {
+	 * List<Evento> result; if(keyword != null && !keyword.isEmpty()) { result =
+	 * eventoService.findByKeyword(keyword); model.addAttribute("keyword", keyword);
+	 * }else { result = eventoService.findAllSortedByName(); }
+	 * model.addAttribute(result); return "/client/eventList"; }
+	 */
+	
 	@GetMapping
-	public String eventsList(Model model) {
-		model.addAttribute("listCat", categoriaService.findAllSortedByName());
-		model.addAttribute("listEve", eventoService.findAllSortedByName());
-
+	public String list(Model model, @RequestParam(name="keyword", required=false) String keyword) {
+		List<Evento> result;
+		if(keyword != null && !keyword.isEmpty()) {
+			result = eventoService.findByKeyword(keyword);
+			model.addAttribute("keyword", keyword);
+		} else {
+			result = eventoService.findAllSortedByName();
+		}
+		model.addAttribute("list", result);
 		return "/client/eventList";
+	}
+	
+	
+	//dettagli
+	@GetMapping("/dettagli/{id}")
+	public String dettagli(Model model,@PathVariable("id") Integer id) {
+		model.addAttribute("evento", eventoService.getById(id));
+		model.addAttribute("postiDisponibili", prenotazioneService.calcolaPosti(eventoService.getById(id)));
+		return "/client/dettagli";
 	}
 
 	// lista eventi
@@ -100,7 +128,7 @@ public class MainController {
 
 	@PostMapping("/admin/edit/{id}")
 	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
-			@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+			@PathVariable("id") Integer id, Model model) {
 		
 		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
 			bindingResult.addError(new ObjectError("dataInizio", "Le date inserite no vanno bene!"));
@@ -124,63 +152,36 @@ public class MainController {
 		return "redirect:/eventi/admin";
 	}
 
-	// creazione location
-	@GetMapping("/admin/createLocation")
-	public String createLocation(Model model) {
-		model.addAttribute("location", new Location());
-		model.addAttribute("listLoc", locationService.findAllSortedByName());
-		return "/admin/createLocation";
-	}
-
-	@PostMapping("/admin/createLocation")
-	public String doCreateLocation(@Valid @ModelAttribute("location") Location location, BindingResult bindingResult,
-			Model model) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("listLoc", locationService.findAllSortedByName());
-			return "/admin/createLocation";
-		}
-		locationService.save(location);
-		return "redirect:/eventi/admin";
-	}
-
-	// crea categoria
-	@GetMapping("/admin/createCategory")
-	public String createCategoria(Model model) {
-		model.addAttribute("listCat", categoriaService.findAllSortedByName());
-		model.addAttribute("categoria", new Categoria());
-		return "/admin/createCategory";
-	}
-
-	@PostMapping("/admin/createCategory")
-	public String doCreateCategoria(@Valid @ModelAttribute("categoria") Categoria categoria,
-			BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("listCat", categoriaService.findAllSortedByName());
-			return "/admin/createCategory";
-		}
-		categoriaService.save(categoria);
-		return "redirect:/eventi/admin";
-	}
+	
 
 	// delete
 	@GetMapping("/admin/delete/{id}")
-	public String doDelete(@PathVariable("id") Integer id) {
+	public String doDelete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+		if(eventoService.getById(id).isPubblicato()) {
+			redirectAttributes.addFlashAttribute("message", "Impossibile cancellare");
+			return "redirect:/eventi/admin";
+		}
+
 		eventoService.deleteById(id);
 		return "redirect:/eventi/admin";
 	}
-
-	@GetMapping("/admin/delete/loc/{id}")
-	public String doDeleteLoc(@PathVariable("id") Integer id) {
-		locationService.deleteById(id);
-		return "redirect:/eventi/admin/createLocation";
-		
+	
+	//pubblica
+	@GetMapping("/admin/pubblica/{id}")
+	public String doPubblica(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+		eventoService.getById(id).setPubblicato(true);
+		eventoService.save(eventoService.getById(id));
+		redirectAttributes.addFlashAttribute("message", "Evento pubblicato correttamente");
+		return "redirect:/eventi/admin";
 	}
 	
-
-	@GetMapping("/admin/delete/cat/{id}")
-	public String doDeleteCat(@PathVariable("id") Integer id) {
-		categoriaService.deleteById(id);
-		return "redirect:/eventi/admin/createCategory";
+	//annulla evento pubblicato
+	@GetMapping("/admin/annulla/{id}")
+	public String doAnnulla(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+		eventoService.getById(id).setAnnullato(true);
+		eventoService.save(eventoService.getById(id));
+		redirectAttributes.addFlashAttribute("message", "Evento annullato correttamente");
+		return "redirect:/eventi/admin";
 	}
 	
 	private void ritornoErrori(Model model) {

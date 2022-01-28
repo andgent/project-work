@@ -5,14 +5,12 @@
 	<div th:replace="fragments/resources :: headTags"></div>
 	<title>Eventi</title>
 </head>
+
 <body>
 	<h1 th:text="|Prenotazione per ${evento.nome}|"></h1>
 
-	<form id="prenotazione" th:object="${prenotazione}"
-		th:action="@{/prenota/{id}(id=${evento.id})}" 
-		method="post"
-		>
-		<div class="m-3 col-8" >
+	<form id="prenotazione" th:object="${prenotazione}" th:action="@{/prenota/{id}(id=${evento.id})}" method="post">
+		<div class="m-3 col-8">
 			<label for="cliente" class="form-label">Nome Cliente</label>
 			<input th:field="*{cliente}" th:errorClass="is-invalid" type="text" class="form-control" id="cliente">
 			<div th:if="${#fields.hasErrors('cliente')}" class="invalid-feedback">
@@ -20,18 +18,24 @@
 					<li th:each="err : ${#fields.errors('cliente')}" th:text="${err}" class="text-danger"></li>
 				</ul>
 			</div>
-		</div  >
-		
+		</div>
+
 		<div class="mb-3 col-3">
-					<label for="numeroPrenotati" class="form-label">Numero posti da prenotare</label>
-					<input th:field="*{numeroPrenotati}" th:errorClass="is-invalid" type="number" class="form-control"
-						id="biglietto">
-					<div th:if="${#fields.hasErrors('numeroPrenotati')}" class="invalid-feedback">
-						<ul>
-							<li th:each="err : ${#fields.errors('numeroPrenotati')}" th:text="${err}" class="text-danger">
-							</li>
-						</ul>
-					</div>
+			<label for="numeroPrenotati" class="form-label">Numero posti da prenotare</label>
+			<input th:field="*{numeroPrenotati}" th:errorClass="is-invalid" type="number" class="form-control"
+				id="biglietto">
+			<div th:if="${#fields.hasErrors('numeroPrenotati')}" class="invalid-feedback">
+				<ul>
+					<li th:each="err : ${#fields.errors('numeroPrenotati')}" th:text="${err}" class="text-danger">
+					</li>
+				</ul>
+			</div>
+			<div th:if="${#fields.hasErrors('dataPrenotazione')}" class="invalid-feedback">
+				<ul>
+					<li th:each="err : ${#fields.errors('dataPrenotazione')}" th:text="${err}" class="text-danger">
+					</li>
+				</ul>
+			</div>
 		</div>
 		<button type="submit" class="btn btn-primary">Salva</button>
 	</form>
