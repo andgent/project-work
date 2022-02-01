@@ -2,6 +2,7 @@ package org.generation.italy.controller;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -14,6 +15,10 @@ import org.generation.italy.service.EventoService;
 import org.generation.italy.service.LocationService;
 import org.generation.italy.service.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,19 +59,37 @@ public class MainController {
 	
 	@GetMapping
 	public String list(Model model, @RequestParam(name="keyword", required=false) String keyword, 
-			@RequestParam(name="filtriCat", required = false) List<Categoria> filtriCat) {
-		List<Evento> result;
+			@RequestParam(name="filtriCat", required = false) List<Categoria> filtriCat, 
+			@RequestParam(name="filtroRegione", required = false) String filtroRegione) {
+		List<Evento> result = new ArrayList<Evento>();
 		
 		if(keyword != null && !keyword.isEmpty()) {
 			result = eventoService.findByKeyword(keyword);
 			model.addAttribute("keyword", keyword);
-		} else if(filtriCat != null && !filtriCat.isEmpty()){
+		} else if(filtriCat != null && !filtriCat.isEmpty() && filtroRegione != null && !filtroRegione.isEmpty()){
+			List<Evento> result1;
+			List<Evento> result2;
+			result1 = eventoService.findByCategorie(filtriCat);
+			result2 = eventoService.findByRegione(filtroRegione);
+			for (Evento evento : result1) {
+				if (result2.contains(evento)) {
+					result.add(evento);
+				}
+			}
+			model.addAttribute("filtroRegione", filtroRegione);
+			model.addAttribute("filtriCat", filtriCat);
+		}else if(filtriCat != null && !filtriCat.isEmpty()){
 			result = eventoService.findByCategorie(filtriCat);
 			model.addAttribute("filtriCat", filtriCat);
+		}else if(filtroRegione != null && !filtroRegione.isEmpty()) {
+			result = eventoService.findByRegione(filtroRegione);
+			model.addAttribute("filtroRegione", filtroRegione);
 		}else {
 			result = eventoService.findAllSortedByName();
 		}
+		
 		model.addAttribute("listCat", categoriaService.findAllSortedByName());
+		model.addAttribute("listLoc", locationService.findAllSortedByName());
 		model.addAttribute("list", result);
 		return "/client/eventList";
 	}
@@ -78,6 +101,15 @@ public class MainController {
 		model.addAttribute("evento", eventoService.getById(id));
 		model.addAttribute("postiDisponibili", prenotazioneService.calcolaPosti(eventoService.getById(id)));
 		return "/client/dettagli";
+	}
+	
+	// visualizzazione locandina
+	@RequestMapping(value = "/dettagli/{id}/photo", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<byte[]> getPhotoContent(@PathVariable Integer id){
+		byte[] photoContent = eventoService.getById(id).getLocandina();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.IMAGE_JPEG);
+		return new ResponseEntity<byte[]>(photoContent, headers, HttpStatus.OK);
 	}
 
 	// lista eventi

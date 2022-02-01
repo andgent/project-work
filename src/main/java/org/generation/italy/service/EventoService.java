@@ -64,10 +64,14 @@ public class EventoService {
 				allEventi.addAll(eventi);
 				eventi.clear();
 			}
-
 		}
 
 		return allEventi;
+	}
+	
+	// filtro per regione
+	public List<Evento> findByRegione(String filtroRegione){
+		return repository.findByRegione(filtroRegione);
 	}
 	
 	// controllo se ci sono eventi con la stessa location

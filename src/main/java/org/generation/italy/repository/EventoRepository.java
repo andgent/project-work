@@ -25,6 +25,11 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 		 		+ "where e.location_id = ?", nativeQuery = true)
 	 List<Evento> findByLocation(Integer id);
 	 
-	
+	 
+	 @Query(value="select e.*\r\n"
+			 +"from evento e \r\n"
+			 +"join location l on e.location_id = l.id\r\n"
+			 +"where l.regione = ?", nativeQuery = true)
+	List<Evento> findByRegione(String regione);
 	 
 }
