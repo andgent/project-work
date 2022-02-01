@@ -1,67 +1,281 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}" />
-	<title>Eventi</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="/stylesheet.css">
+<link rel="stylesheet" href="/cards.css">
+<link rel="stylesheet" href="/footer.css">
+<link rel="stylesheet" href="/filtri.css">
+<link rel="stylesheet" href="/navbar.css">
+<link rel="stylesheet" href="/regions.css">
+<link rel="stylesheet" href="/locandinadettagli.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous">
+<link
+	href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+	rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Russo+One&display=swap"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<title>Home</title>
 </head>
 
 <body>
-	<h1>Eventi</h1>
-	
-	<form th:action="@{/eventi/}" method="get">
-		<div class="input-group">
-			<input name="keyword" th:value="${keyword}" class="form-control" type="search" placeholder="Search"
-				aria-label="Search">
-			<button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+	<!--Navbar-->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand titolo" id="navbar-brand" th:href="@{/eventi}">Gestore
+				Eventi</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link active home"
+						id="navbar-brand" aria-current="page" th:href="@{/eventi}"><span>&nbsp;
+								&nbsp;</span>Home</a></li>
+					<div class="nav-item mx-3">
+						<li class="nav-item"><a class="nav-link active"
+							id="navbar-brand" aria-current="page" href="#form">Contatti</a></li>
+					</div>
+				</ul>
+				<form class="d-flex ricercaspazio" th:action="@{/eventi/}"
+					method="get">
+					<input th:name="keyword" th:value="${keyword}"
+						class="form-control me-2" type="search"
+						placeholder="Cerca per evento" aria-label="Search">
+					<button class="btn" id="bottonericerca" type="submit">Ricerca</button>
+				</form>
+			</div>
 		</div>
-		
-		<div class="form-check" th:each="categoria : ${listCat}" th:if="${filtriCat != null}" >
-			<input class="form-check-input" type="checkbox" th:id="${categoria.id}" th:name="filtriCat" th:value="${categoria.id}" 
-			th:checked="${#lists.contains(filtriCat, categoria)}" >
-			<label class="form-check-label" th:for="${categoria.id}" th:text="${categoria.nome}"></label>
-		</div>
-		<div class="form-check" th:each="categoria : ${listCat}" th:if="${filtriCat == null}" >
-			<input class="form-check-input" type="checkbox" th:id="${categoria.id}" th:name="filtriCat" th:value="${categoria.id}" >
-			<label class="form-check-label" th:for="${categoria.id}" th:text="${categoria.nome}"></label>
-		</div>
-	</form>
-	
-	
-	<table class="table" th:object="${evento}">
-		<thead>
-			<tr>
-				<th scope="col">Id</th>
-				<th scope="col">Nome</th>
-				<th scope="col">Location</th>
-				<th scope="col">Categoria</th>
-				<th scope="col">Data di inizio</th>
-				<th scope="col">Data di fine</th>
-				<th scope="col">Prezzo</th>
-				<th scope="col">Dettagli</th>
-				<th scope="col">Prenota</th>
-			</tr>
-		</thead>
-		<tbody>
-				<tr th:each="item : ${list}">
-				<td th:text="${item.id}"></td>
-				<th th:text="${item.nome}"></th>
-				<td th:text="${item.location.getNome()}"></td>
-				<td th:text="${item.categorieString()}"></td>
-				<td th:text="${item.dataInizio}"></td>
-				<td th:text="${item.dataFine}"></td>
-				<td th:text="${item.biglietto}">
-				<td><a th:text="dettagli" th:href="@{|/eventi/dettagli/${item.id}|}"></a></td>
-				<td><a th:text="prenota" th:href="@{|/prenota/${item.id}|}"></a></td>
-			</tr>
-				
-				
-		</tbody>
-	</table>
-	<script th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
-</body>
+	</nav>
+	<!--Banner-->
+	<div class="container-fluid px-0">
+		<img src="/img/4k.png" alt="concert" class="imgbanner">
+	</div>
 
+	<!--Cards-->
+
+	<div class="container d-flex justify-content-center p-5">
+		<div class="row gx-0">
+			<div class="col-xl-8 col-12 col-sm-12 bigcol">
+				<h1 class="text-center text-uppercase">i nostri eventi</h1>
+				<div class="row mt-5">
+					<div class="col-5 d-flex justify-content-center contentside"
+						th:each="item : ${list}">
+						<div class="card bg-dark border-0">
+							<div class="slide slide1">
+								<div class="content">
+									<div class="icon">
+										<img th:src="|/eventi/dettagli/${item.id}/photo|" class="fa"
+											alt="cinghiale">
+									</div>
+								</div>
+							</div>
+							<div class="slide slide2 bg-light">
+								<div class="content mt-5">
+									<h3 th:text="${item.nome}"></h3>
+									<blockquote class="blockquote">
+										<p class="description" th:text="${item.descrizione}"></p>
+									</blockquote>
+									<div class="d-flex justify-content-center">
+										<a class="btn btn-dark mb-5" role="button"
+											th:href="@{|/eventi/dettagli/${item.id}|}">Dettagli</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-xl-4 col-12 col-sm-12 bg-dark text-light text-center">
+				<div id="citazione">
+					<!-- Citazione-->
+					<figure class="text-center">
+						<blockquote class="blockquote">
+							<p>"I am more and more convinced that our happiness or our
+								unhappiness depends far more on the way we meet the events of
+								life than on the nature of those events themselves."</p>
+						</blockquote>
+						<figcaption class="blockquote-footer">Wilhelm von
+							Humboldt</figcaption>
+					</figure>
+
+				</div>
+				<form th:action="@{/eventi/}" method="get">
+					<div id="ricerca">
+						<h3 class="pb-3 text-uppercase">cerca eventi</h3>
+						<div class="side">
+							<div class="row py-3">
+								<h5 id="filtri">Filtra per categoria:</h5>
+								<div class="container">
+									<ul class="ks-cboxtags" th:if="${filtriCat != null}">
+										<li class="bottoni" th:each="item : ${listCat}"><input
+											type="checkbox" th:id="${item.id}" th:name="filtriCat"
+											th:value="${item.id}" class="form-check-input"
+											th:checked="${#lists.contains(filtriCat, categoria)}"><label
+											th:for="${item.id}" th:text="${item.nome}"></label></li>
+									</ul>
+									<ul class="ks-cboxtags" th:unless="${filtriCat != null}">
+										<li class="bottoni" th:each="item : ${listCat}"><input
+											type="checkbox" th:id="${item.id}" th:name="filtriCat"
+											th:value="${item.id}" class="form-check-input"><label
+											th:for="${item.id}" th:text="${item.nome}"></label></li>
+									</ul>
+								</div>
+							</div>
+							<div class="row pb-5 d-flex justify-content-center">
+								<h5 class="pb-4" id="filtri">Filtra per regioni:</h5>
+								<select class="form-select text-center" th:name="filtroRegione"
+									aria-label="location">
+									<option class="seleziona" th:value="${null}" selected>Seleziona</option>
+									<option value="Abruzzo">Abruzzo</option>
+									<option value="Basilicata">Basilicata</option>
+									<option value="Calabria">Calabria</option>
+									<option value="Campania">Campania</option>
+									<option value="Emilia-Romagna">Emilia-Romagna</option>
+									<option value="Friuli Venezia Giulia">Friuli Venezia
+										Giulia</option>
+									<option value="Lazio">Lazio</option>
+									<option value="Liguria">Liguria</option>
+									<option value="Lombardia">Lombardia</option>
+									<option value="Marche">Marche</option>
+									<option value="Molise">Molise</option>
+									<option value="Piemonte">Piemonte</option>
+									<option value="Puglia">Puglia</option>
+									<option value="Sardegna">Sardegna</option>
+									<option value="Sicilia">Sicilia</option>
+									<option value="Toscana">Toscana</option>
+									<option value="Trentino-Alto Adige">Trentino-Alto
+										Adige</option>
+									<option value="Umbria">Umbria</option>
+									<option value="Valle d'Aosta">Valle d'Aosta</option>
+									<option value="Veneto">Veneto</option>
+								</select>
+							</div>
+							<div class="row pb-5">
+								<h5 id="filtri">Filtra per:</h5>
+								<div class="container">
+									<ul class="ks-cboxtags">
+										<li><input type="checkbox" id="indoor"
+											value="Rainbow Dash"><label for="indoor">Al
+												chiuso</label></li>
+										<li><input type="checkbox" id="outdoor"
+											value="Cotton Candy" checked><label for="outdoor">All'aperto</label></li>
+									</ul>
+								</div>
+								<div class="row form-check form-switch">
+									<h5 class="pb-4" id="filtri">Mostra solo per posti
+										disponibili</h5>
+									<div class="d-flex justify-content-center">
+										<div class="div">
+											<label class="form-check-label no text-uppercase"
+												for="flexSwitchCheckDefault">no</label>
+										</div>
+										<div class="div">
+											<input class="form-check-input on-off" type="checkbox"
+												id="flexSwitchCheckDefault">
+										</div>
+										<div>
+											<label class="form-check-label si text-uppercase"
+												for="flexSwitchCheckDefault">si</label>
+										</div>
+									</div>
+									<button class="btn btn-danger mt-5" type="submit">Invia</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--Footer-->
+	<footer>
+		<div class="row">
+			<!-- Form -->
+			<div class="d-flex justify-content-center" id="form">
+				<div class="container-fluid">
+					<div class="screen">
+						<div class="screen-body">
+							<div class="screen-body-item left">
+								<div class="app-title text-uppercase">
+									<span>contact</span> <span>us</span>
+								</div>
+
+								<div class="app-contact text-uppercase">
+									<span id="contatti">indirizzo : </span> via Prova 10, Milano
+									(MI)
+								</div>
+								<div class="app-contact text-uppercase">
+									<span id="contatti">email : </span> gestioneventi@gmail.com
+								</div>
+								<div class="app-contact text-uppercase">
+									<span id="contatti">numero di telefono : </span> 0293123419
+								</div>
+							</div>
+							<div class="screen-body-item">
+								<div class="app-form">
+									<div class="app-form-group">
+										<input class="app-form-control" placeholder="Nome">
+									</div>
+									<div class="app-form-group">
+										<input class="app-form-control" placeholder="Email">
+									</div>
+									<div class="app-form-group">
+										<input class="app-form-control"
+											placeholder="Numero di telefono">
+									</div>
+									<div class="app-form-group message">
+										<input class="app-form-control" placeholder="Messaggio">
+									</div>
+									<div class="app-form-group buttons">
+										<button class="app-form-button btn me-3 text-uppercase">cancella</button>
+										<button class="app-form-button btn text-uppercase">invia</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="text-light text-center mb-2">
+			<hr>
+			<span>GenerationEvents&#169; &nbsp; &#124; &nbsp; Via Pinco
+				Pallino Developer, 42 &nbsp; &#124; &nbsp;</span> <a href="#"
+				class="colore me-3"><i class="bi bi-facebook"></i></a> <a href="#"
+				class="colore me-3"><i class="bi bi-instagram"></i></a> <a href="#"
+				class="colore me-3"><i class="bi bi-snapchat"></i></a> <a href="#"
+				class="colore me-3"><i class="bi bi-twitter"></i></a> <a href="#"
+				class="colore me-3"><i class="bi bi-linkedin"></i></a> <a href="#"
+				class="colore me-3"><i class="bi bi-youtube"></i></a>
+		</div>
+	</footer>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/238d6d3e14.js"
+		crossorigin="anonymous"></script>
+</body>
 </html>

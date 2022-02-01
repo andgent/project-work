@@ -1,0 +1,13 @@
+body {
+  font-family: "Roboto Slab", serif;
+  background-color: #212529;
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+
+h1,
+h3 {
+  font-weight: bold;
+  color: yellow;
+}

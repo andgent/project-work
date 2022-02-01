@@ -1,0 +1,131 @@
+/* CATEGORIES*/
+#filtri {
+  color: whitesmoke;
+}
+ul.ks-cboxtags {
+  list-style: none;
+  padding: 20px;
+}
+
+ul.ks-cboxtags li {
+  display: inline-block;
+}
+
+ul.ks-cboxtags li label {
+  font-weight: bold;
+  display: inline-block;
+  background-color: whitesmoke;
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 25px;
+  white-space: nowrap;
+  margin: 3px 0px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+}
+
+ul.ks-cboxtags li label {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+ul.ks-cboxtags li label::before {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 12px;
+  padding: 2px 6px 2px 2px;
+  transition: transform 0.3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label::before {
+  transform: rotate(-360deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+ul.ks-cboxtags li input[type="checkbox"]:checked + label {
+  background-color: rgba(255, 0, 0, 0.7);
+  color: rgb(255, 255, 255);
+  transition: all 0.2s;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+  display: absolute;
+}
+
+ul.ks-cboxtags li input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+/* SWITCH POSTI DISPONIBILI */
+
+.on-off {
+  transform: translate(50%, 0%);
+}
+
+.no {
+  padding-right: 40px;
+}
+
+.si {
+  padding-left: 25px;
+}
+
+.form-check-input {
+  background-color: rgba(255, 255, 255, 1);
+  border-color: whitesmoke;
+}
+
+.form-check-input:checked {
+  background-color: rgba(255, 0, 0, 0.7);
+  border-color: rgba(255, 0, 0, 0.7);
+}
+
+/* posizione colonna ricerca */
+
+#ricerca {
+  padding-top: 75px;
+}
+
+/* CITAZIONE */
+
+.blockquote {
+  color: whitesmoke;
+}
+.blockquote-footer {
+  color: yellow;
+}
+#citazione {
+  padding-top: 150px;
+  font-family: "Bebas Neue", cursive;
+  font-size: 1.5em;
+}
+
+/* OMBRE E DIMENSIONI RICERCA*/
+
+.side {
+  box-shadow: 5px 5px 30px rgba(0, 0, 0, 1);
+  height: 50%;
+}
+
+.bottoni {
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 7px;
+}
+
+.btn-danger {
+	background-color: transparent;
+	border: rgba(255,0,0,0.7) 2px solid;
+	font-weight: bold;
+	text-transform: uppercase;
+}

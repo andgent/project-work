@@ -1,0 +1,57 @@
+.locandina {
+  width: 800px;
+  height: 700px;
+}
+
+/* dimensione della locandina nei dettagli */
+#boxlocandina {
+  width: fit-content;
+  block-size: fit-content;
+}
+
+#bottoneprenotazione {
+  height: 50px;
+  background-color: yellow;
+  border: none;
+  color: black;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+#bottoneprenotazione:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  color: yellow;
+}
+
+/* categorie nei dettagli */
+#dettaglicategorie {
+  list-style: none;
+  padding: 20px;
+  display: inline-block;
+  font-weight: bold;
+  display: inline-block;
+  background-color: whitesmoke;
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 25px;
+  white-space: nowrap;
+  margin: 3px 0px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.titolini {
+  color: rgba(230, 221, 97, 0.973);
+}
+
+i {
+  color: yellow;
+  font-size: 1.5rem !important;
+}

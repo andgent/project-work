@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="fragments/resources :: headTags"></div>
+	<title>Eventi</title>
+</head>
+<body>
+
+	<h1 th:text="|Dettagli di ${evento.nome}|"></h1>
+	<div class="container">
+	
+	<p th:text="|Descrizione: ${evento.descrizione}|"></p>
+	<p th:text="|Data inizio: ${evento.inizioToString()}|"></p>
+	<p th:text="|Data fine: ${evento.fineToString()}|"></p>
+	<p th:text="|Location: ${evento.location.getNome()}|"></p>
+	<p th:text="|Posti disponibili: ${postiDisponibili}|"></p>
+	
+	</div>
+	<div th:replace="fragments/resources :: scripts"></div>
+</body>
+</html>
