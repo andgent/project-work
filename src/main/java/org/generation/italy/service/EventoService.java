@@ -2,8 +2,10 @@ package org.generation.italy.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.generation.italy.model.Categoria;
 import org.generation.italy.model.Evento;
 import org.generation.italy.model.EventoForm;
 import org.generation.italy.repository.EventoRepository;
@@ -21,6 +23,7 @@ public class EventoService {
 		return repository.findAll(Sort.by("nome"));
 	}
 	
+	// ricerca eventi per keyword
 	public List<Evento> findByKeyword(String keyword){
 		return repository.findByNomeContainingIgnoreCase(keyword);
 	}
@@ -37,6 +40,34 @@ public class EventoService {
 			}
 		}
 		return false;
+	}
+	
+	// filtro per categorie
+	public List<Evento> findByCategorie(List<Categoria> filtriCat){
+		
+		List<Evento> allEventi = new ArrayList<Evento>();
+		List<Evento> eventi = new ArrayList<Evento>();
+		int i=0;
+		
+		for (Categoria cat : filtriCat) {
+			List<Evento> e = repository.findByCategoria(cat.getId());
+			i++;
+			if (i == 1) {
+				allEventi = e;
+			} else {
+				for (Evento evento : allEventi) {
+					if (e.contains(evento)) {
+						eventi.add(evento);
+					}
+				}
+				allEventi = new ArrayList<Evento>();
+				allEventi.addAll(eventi);
+				eventi.clear();
+			}
+
+		}
+
+		return allEventi;
 	}
 	
 	// controllo se ci sono eventi con la stessa location
@@ -124,8 +155,5 @@ public class EventoService {
             return repository.save(evento);
            
     }
-	
-	
-	
-	
+
 }

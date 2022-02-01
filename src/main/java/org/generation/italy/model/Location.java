@@ -17,11 +17,22 @@ public class Location {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
+	@NotEmpty(message = "Il campo \"nome\" ï¿½ obbligatorio!")
 	private String nome;
+	
+	@NotEmpty(message = "Il campo \"regione\" ï¿½ obbligatorio!")
+	private String regione;
+	
+	@NotEmpty(message = "Il campo \"cittÃ \" ï¿½ obbligatorio!")
+	private String citta;
+	
+	@NotEmpty(message = "Il campo \"indirizzo\" ï¿½ obbligatorio!")
+	private String indirizzo;
 	
 	@Positive(message = "Il campo \"capienza\" accetta solo numeri interi positivi!")
 	private int capienza;
+	
+	private boolean openSpace;
 	
 	//Relazioni
 	@OneToMany
@@ -54,6 +65,42 @@ public class Location {
 
 	public void setEventi(List<Evento> eventi) {
 		this.eventi = eventi;
+	}
+
+	public String getRegione() {
+		return regione;
+	}
+
+	public void setRegione(String regione) {
+		this.regione = regione;
+	}
+
+	public String getCitta() {
+		return citta;
+	}
+
+	public void setCitta(String citta) {
+		this.citta = citta;
+	}
+
+	public String getIndirizzo() {
+		return indirizzo;
+	}
+
+	public void setIndirizzo(String indirizzo) {
+		this.indirizzo = indirizzo;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public boolean isOpenSpace() {
+		return openSpace;
+	}
+
+	public void setOpenSpace(boolean openSpace) {
+		this.openSpace = openSpace;
 	}
 
 } 

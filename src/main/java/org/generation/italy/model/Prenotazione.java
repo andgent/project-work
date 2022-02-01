@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -18,10 +19,16 @@ public class Prenotazione {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotNull
-	private String cliente;
+	@NotEmpty(message = "Il campo \"nome\" � obbligatorio!")
+	private String nome;
+	
+	@NotEmpty(message = "Il campo \"cognome\" � obbligatorio!")
+	private String cognome;
 	
 	private LocalDateTime dataPrenotazione;
+	
+	@NotEmpty(message = "Il campo \"email\" � obbligatorio!")
+	private String email;
 	
 	@NotNull
 	@Positive
@@ -37,14 +44,6 @@ public class Prenotazione {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	public String getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(String cliente) {
-		this.cliente = cliente;
 	}
 
 	public LocalDateTime getDataPrenotazione() {
@@ -69,6 +68,30 @@ public class Prenotazione {
 
 	public void setEvento(Evento evento) {
 		this.evento = evento;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCognome() {
+		return cognome;
+	}
+
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
 	}
 
 	

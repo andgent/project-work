@@ -1,59 +1,65 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<html lang="it" xmlns:th="http://www.thymeleaf.org/">
 
 <head>
-	<div th:replace="fragments/resources :: headTags"></div>
-	<title>Eventi</title>
+    <div th:replace="fragments/resources :: headTags"></div>
+    <title>Eventi</title>
 </head>
 
 <nav th:replace="fragments/navbar"></nav>
 
 <body>
 
-	<h1>Crea nuova categoria</h1>
+    <div class="m-3">
+
+    <h1>Crea nuova categoria</h1>
+    </div>
+	
+	<div class="alert alert-error alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
+		<span th:text="${errorMessage}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+    <div class="m-3 col-11">
+        <form id="categoria-form" th:object="${categoria}" th:action="@{/eventi/admin/createCategory}" method="post">
+
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="categoria">
+                <div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
+                    </ul>
+                </div>
+            </div>
 
 
-	<form id="categoria-form" th:object="${categoria}" th:action="@{/eventi/admin/createCategory}" method="post">
+            <button type="submit" class="btn btn-primary">Crea</button>
+            <button type="reset" class="btn btn-primary ms-1">Resetta tutti i campi</button>
+        </form>
 
-		<div class="mb-3">
-			<label for="nome" class="form-label">Nome</label>
-			<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="categoria">
-			<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
-				</ul>
-			</div>
-		</div>
+    </div>
 
 
+    <table class="table table-striped m-3">
+        <thead>
+            <tr>
+                <th class="col-4" scope="col">Nome</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cat : ${listCat}">
+                <td th:text="${cat.nome}"></td>
+                <td><a type="button" th:href="@{|/eventi/admin/delete/cat/${cat.id}|}"
+                        onclick="return confirm('Sei sicuro?')">Elimina</a></td>
+            </tr>
+
+        </tbody>
+    </table>
 
 
-
-		<button type="submit" class="btn btn-primary">Crea</button>
-		<button type="reset" class="btn btn-primary">Resetta tutti i campi</button>
-	</form>
-
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col">Nome</th>
-				<th scope="col"></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="cat : ${listCat}">
-				<td th:text="${cat.nome}"></td>
-				<td><a type="button" th:href="@{|/eventi/admin/delete/cat/${cat.id}|}"
-						onclick="return confirm('Sei sicuro?')">Elimina</a></td>
-			</tr>
-
-		</tbody>
-	</table>
-
-
-
-
-	<div th:replace="fragments/resources :: scripts"></div>
+    <div th:replace="fragments/resources :: scripts"></div>
 </body>
 
 </html>

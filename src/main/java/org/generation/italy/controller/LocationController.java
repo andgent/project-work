@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/eventi")
@@ -42,7 +43,11 @@ public class LocationController {
 		
 		
 		@GetMapping("/admin/delete/loc/{id}")
-		public String doDeleteLoc(@PathVariable("id") Integer id) {
+		public String doDeleteLoc(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+			if(locationService.hasEvent(id)) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Impossibile cancellare questa location");
+				return "redirect:/eventi/admin/createLocation";
+			}
 			locationService.deleteById(id);
 			return "redirect:/eventi/admin/createLocation";
 			

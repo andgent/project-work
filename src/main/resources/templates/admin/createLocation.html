@@ -9,36 +9,93 @@
 <nav th:replace="fragments/navbar"></nav>
 
 <body>
-	<h1>Crea nuova location</h1>
-	<form id="evento-form" th:object="${location}" th:action="@{/eventi/admin/createLocation}" method="post">
-		<div class="mb-3">
-			<label for="nome" class="form-label">Nome</label>
-			<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="nome">
-			<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
-				</ul>
-			</div>
-		</div>
-		<div class="mb-3">
-			<label for="capienza" class="form-label">Capienza</label>
-			<input th:field="*{capienza}" th:errorClass="is-invalid" type="number" class="form-control" id="capienza">
-			<div th:if="${#fields.hasErrors('capienza')}" class="invalid-feedback">
-				<ul>
-					<li th:each="err : ${#fields.errors('capienza')}" th:text="${err}" class="text-danger"></li>
-				</ul>
-			</div>
-		</div>
-		<button type="submit" class="btn btn-primary">Crea</button>
-		<button type="reset" class="btn btn-primary">Resetta tutti i campi</button>
-	</form>
 
+	<div class="m-3">
 
-	<table class="table">
+		<h1>Crea nuova location</h1>
+
+	</div>
+
+	<div class="alert alert-error alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
+		<span th:text="${errorMessage}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	
+	<div class="m-3 col-11">
+
+		<form id="evento-form" th:object="${location}" th:action="@{/eventi/admin/createLocation}" method="post">
+			<div class="mb-3">
+				<label for="nome" class="form-label">Nome</label>
+				<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="nome">
+				<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="capienza" class="form-label">Capienza</label>
+				<input th:field="*{capienza}" th:errorClass="is-invalid" type="number" class="form-control"
+					id="capienza">
+				<div th:if="${#fields.hasErrors('capienza')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('capienza')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="citta" class="form-label">Città</label>
+				<input th:field="*{citta}" th:errorClass="is-invalid" type="text" class="form-control" id="citta">
+				<div th:if="${#fields.hasErrors('citta')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('citta')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="regione" class="form-label">Regione</label>
+				<input th:field="*{regione}" th:errorClass="is-invalid" type="text" class="form-control" id="regione">
+				<div th:if="${#fields.hasErrors('regione')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('regione')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="indirizzo" class="form-label">Indirizzo</label>
+				<input th:field="*{indirizzo}" th:errorClass="is-invalid" type="text" class="form-control" id="indirizzo">
+				<div th:if="${#fields.hasErrors('indirizzo')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('indirizzo')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+			</div>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" th:field="*{openSpace}" th:value="true">
+				<label class="form-check-label" for="flexRadioDefault1">
+					Location all'aperto
+				</label>
+			</div>
+			<div class="form-check">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" th:field="*{openSpace}" th:value="false" checked>
+				<label class="form-check-label" for="flexRadioDefault2">
+					Location al chiuso
+				</label>
+			</div>
+			<button type="submit" class="btn btn-primary">Crea</button>
+			<button type="reset" class="btn btn-primary ms-1">Resetta tutti i campi</button>
+		</form>
+
+	</div>
+
+	<table class="table table-striped m-3">
 		<thead>
 			<tr>
-				<th scope="col">Nome</th>
-				<th scope="col">Posti</th>
+				<th class="col-2" scope="col">Nome</th >
+				<th class="col-2" scope="col">Posti</th>
+				<th class="col-2" scope="col">Città</th>
+				<th class="col-2" scope="col">Regione</th>
+				<th class="col-2" scope="col">Indirizzo</th>
 				<th scope="col"></th>
 			</tr>
 		</thead>
@@ -46,15 +103,15 @@
 			<tr th:each="loc : ${listLoc}">
 				<td th:text="${loc.nome}"></td>
 				<td th:text="${loc.capienza}"></td>
+				<td th:text="${loc.citta}"></td>
+				<td th:text="${loc.regione}"></td>
+				<td th:text="${loc.indirizzo}"></td>
 				<td><a type="button" th:href="@{|/eventi/admin/delete/loc/${loc.id}|}"
 						onclick="return confirm('Sei sicuro?')">Elimina</a></td>
 			</tr>
 
 		</tbody>
 	</table>
-
-
-
 
 	<div th:replace="fragments/resources :: scripts"></div>
 </body>

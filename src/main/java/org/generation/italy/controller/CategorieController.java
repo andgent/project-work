@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/eventi")
@@ -41,7 +42,11 @@ public class CategorieController {
 		}
 		
 		@GetMapping("/admin/delete/cat/{id}")
-		public String doDeleteCat(@PathVariable("id") Integer id) {
+		public String doDeleteCat(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+			if(categoriaService.hasEvent(id)) {
+				redirectAttributes.addFlashAttribute("errorMessage", "Impossibile cancellare questa categoria");
+				return "redirect:/eventi/admin/createCategory";
+			}
 			categoriaService.deleteById(id);
 			return "redirect:/eventi/admin/createCategory";
 		}

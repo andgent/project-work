@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.generation.italy.model.Categoria;
 import org.generation.italy.model.Evento;
 import org.generation.italy.model.EventoForm;
 import org.generation.italy.service.CategoriaService;
@@ -52,14 +53,20 @@ public class MainController {
 	 */
 	
 	@GetMapping
-	public String list(Model model, @RequestParam(name="keyword", required=false) String keyword) {
+	public String list(Model model, @RequestParam(name="keyword", required=false) String keyword, 
+			@RequestParam(name="filtriCat", required = false) List<Categoria> filtriCat) {
 		List<Evento> result;
+		
 		if(keyword != null && !keyword.isEmpty()) {
 			result = eventoService.findByKeyword(keyword);
 			model.addAttribute("keyword", keyword);
-		} else {
+		} else if(filtriCat != null && !filtriCat.isEmpty()){
+			result = eventoService.findByCategorie(filtriCat);
+			model.addAttribute("filtriCat", filtriCat);
+		}else {
 			result = eventoService.findAllSortedByName();
 		}
+		model.addAttribute("listCat", categoriaService.findAllSortedByName());
 		model.addAttribute("list", result);
 		return "/client/eventList";
 	}

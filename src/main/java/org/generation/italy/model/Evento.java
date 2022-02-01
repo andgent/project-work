@@ -206,5 +206,6 @@ public class Evento {
 		public void setModificato(boolean modificato) {
 			this.modificato = modificato;
 		}
+
 	
 }
