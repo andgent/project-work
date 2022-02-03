@@ -32,13 +32,14 @@ public class LocationController {
 
 		@PostMapping("/admin/createLocation")
 		public String doCreateLocation(@Valid @ModelAttribute("location") Location location, BindingResult bindingResult,
-				Model model) {
+				Model model, RedirectAttributes redirectAttributes) {
 			if (bindingResult.hasErrors()) {
 				model.addAttribute("listLoc", locationService.findAllSortedByName());
 				return "/admin/createLocation";
 			}
 			locationService.save(location);
-			return "redirect:/eventi/admin";
+			redirectAttributes.addFlashAttribute("message", "Location creata con successo!");
+			return "redirect:/eventi/admin/createLocation";
 		}
 		
 		
@@ -49,6 +50,7 @@ public class LocationController {
 				return "redirect:/eventi/admin/createLocation";
 			}
 			locationService.deleteById(id);
+			redirectAttributes.addFlashAttribute("message", "Location eliminata con successo!");
 			return "redirect:/eventi/admin/createLocation";
 			
 		}

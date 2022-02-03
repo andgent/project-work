@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.generation.italy.model.Categoria;
 import org.generation.italy.model.Evento;
 import org.generation.italy.model.EventoForm;
+import org.generation.italy.model.Prenotazione;
 import org.generation.italy.service.CategoriaService;
 import org.generation.italy.service.EventoService;
 import org.generation.italy.service.LocationService;
@@ -44,29 +45,20 @@ public class MainController {
 
 	@Autowired
 	private LocationService locationService;
-	
+
 	@Autowired
 	private PrenotazioneService prenotazioneService;
 
-	/*
-	 * @GetMapping public String eventsList(Model
-	 * model, @RequestParam(name="keyword", required=false) String keyword) {
-	 * List<Evento> result; if(keyword != null && !keyword.isEmpty()) { result =
-	 * eventoService.findByKeyword(keyword); model.addAttribute("keyword", keyword);
-	 * }else { result = eventoService.findAllSortedByName(); }
-	 * model.addAttribute(result); return "/client/eventList"; }
-	 */
-	
 	@GetMapping
-	public String list(Model model, @RequestParam(name="keyword", required=false) String keyword, 
-			@RequestParam(name="filtriCat", required = false) List<Categoria> filtriCat, 
-			@RequestParam(name="filtroRegione", required = false) String filtroRegione) {
+	public String list(Model model, @RequestParam(name = "keyword", required = false) String keyword,
+			@RequestParam(name = "filtriCat", required = false) List<Categoria> filtriCat,
+			@RequestParam(name = "filtroRegione", required = false) String filtroRegione) {
 		List<Evento> result = new ArrayList<Evento>();
-		
-		if(keyword != null && !keyword.isEmpty()) {
+
+		if (keyword != null && !keyword.isEmpty()) {
 			result = eventoService.findByKeyword(keyword);
 			model.addAttribute("keyword", keyword);
-		} else if(filtriCat != null && !filtriCat.isEmpty() && filtroRegione != null && !filtroRegione.isEmpty()){
+		} else if (filtriCat != null && !filtriCat.isEmpty() && filtroRegione != null && !filtroRegione.isEmpty()) {
 			List<Evento> result1;
 			List<Evento> result2;
 			result1 = eventoService.findByCategorie(filtriCat);
@@ -78,34 +70,64 @@ public class MainController {
 			}
 			model.addAttribute("filtroRegione", filtroRegione);
 			model.addAttribute("filtriCat", filtriCat);
-		}else if(filtriCat != null && !filtriCat.isEmpty()){
+		} else if (filtriCat != null && !filtriCat.isEmpty()) {
 			result = eventoService.findByCategorie(filtriCat);
 			model.addAttribute("filtriCat", filtriCat);
-		}else if(filtroRegione != null && !filtroRegione.isEmpty()) {
+		} else if (filtroRegione != null && !filtroRegione.isEmpty()) {
 			result = eventoService.findByRegione(filtroRegione);
 			model.addAttribute("filtroRegione", filtroRegione);
-		}else {
+		} else {
 			result = eventoService.findAllSortedByName();
 		}
-		
+
 		model.addAttribute("listCat", categoriaService.findAllSortedByName());
 		model.addAttribute("listLoc", locationService.findAllSortedByName());
 		model.addAttribute("list", result);
+		model.addAttribute("service", prenotazioneService);
 		return "/client/eventList";
 	}
-	
-	
-	//dettagli
+
+	// dettagli
 	@GetMapping("/dettagli/{id}")
-	public String dettagli(Model model,@PathVariable("id") Integer id) {
+	public String dettagli(Model model, @PathVariable("id") Integer id) {
 		model.addAttribute("evento", eventoService.getById(id));
 		model.addAttribute("postiDisponibili", prenotazioneService.calcolaPosti(eventoService.getById(id)));
+		model.addAttribute("prenotazione", new Prenotazione());
 		return "/client/dettagli";
 	}
-	
+
+	@PostMapping("/dettagli/{eventoId}")
+	public String doPrenota(Model model, @Valid @ModelAttribute("prenotazione") Prenotazione prenotazione,
+			BindingResult bindingResult, @PathVariable("eventoId") Integer id, RedirectAttributes redirectAttributes) {
+		prenotazione.setEvento(eventoService.getById(id));
+		prenotazione.setDataPrenotazione(LocalDateTime.now());
+
+		if (prenotazione != null) {
+
+			if (!prenotazioneService.isValidPrenota(prenotazione)) {
+				bindingResult.addError(new ObjectError("numeroPrenotati",
+						"Impossibile prenotare pi� biglietti di quanti siano disponibili!"));
+			}
+
+			if (!prenotazioneService.isValidTime(prenotazione)) {
+				bindingResult
+						.addError(new ObjectError("dataPrenotazione", "Impossibile prenotare un evento imminente!"));
+			}
+		}
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("evento", eventoService.getById(id));
+			return "/client/dettagli";
+		}
+
+		prenotazioneService.save(prenotazione);
+		redirectAttributes.addFlashAttribute("message", "Prenotazione effettuata con successo");
+		return "redirect:/eventi/dettagli/{eventoId}";
+	}
+
 	// visualizzazione locandina
 	@RequestMapping(value = "/dettagli/{id}/photo", produces = MediaType.IMAGE_JPEG_VALUE)
-	public ResponseEntity<byte[]> getPhotoContent(@PathVariable Integer id){
+	public ResponseEntity<byte[]> getPhotoContent(@PathVariable Integer id) {
 		byte[] photoContent = eventoService.getById(id).getLocandina();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.IMAGE_JPEG);
@@ -132,24 +154,34 @@ public class MainController {
 
 	@PostMapping("/admin/create")
 	public String doCreateEvent(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
-			Model model) {
-		
-		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
-			bindingResult.addError(new ObjectError("dataInizio", "Le date inserite no vanno bene!"));
+			Model model, RedirectAttributes redirectAttributes) {
+
+		if (!eventoForm.getDataInizio().isEmpty() && !eventoForm.getDataFine().isEmpty()) {
+			if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()),
+					LocalDateTime.parse(eventoForm.getDataFine()))) {
+				bindingResult.addError(new ObjectError("dataInizio", "Le date inserite non vanno bene!"));
+				model.addAttribute("dataError", "La data di fine non puo essere precedente a quella di inizio evento!");
+			}
+			if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm)) {
+
+				model.addAttribute("locationError", "Location gia utilizzata!");
+				bindingResult.addError(new ObjectError("location", "Location gia' occupata in questa data!"));
+			}
+			if (!eventoService.isFuturo(eventoForm.getDataInizio())) {
+				bindingResult.addError(new ObjectError("dataInizio", "Le date inserite non vanno bene!"));
+				model.addAttribute("dataError", "La data di inizio e passata");
+			}
 		}
-		
-		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm)) {
-			bindingResult.addError(new ObjectError("dataInizio", "Location già occupata in questa data!"));
-		}
-		
+
 		if (bindingResult.hasErrors()) {
 			ritornoErrori(model);
 			model.addAttribute("edit", false);
 			return "/admin/create";
 		}
-		
+
 		try {
 			eventoService.save(eventoForm);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -160,7 +192,7 @@ public class MainController {
 	@GetMapping("/admin/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
 		model.addAttribute("edit", true);
-		model.addAttribute("eventoForm",eventoService.getById(id));
+		model.addAttribute("eventoForm", eventoService.getById(id).toEventoForm());
 		ritornoErrori(model);
 		return "/admin/create";
 	}
@@ -168,21 +200,24 @@ public class MainController {
 	@PostMapping("/admin/edit/{id}")
 	public String doUpdate(@Valid @ModelAttribute("eventoForm") EventoForm eventoForm, BindingResult bindingResult,
 			@PathVariable("id") Integer id, Model model) {
-		
-		if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()), LocalDateTime.parse(eventoForm.getDataFine()))) {
-			bindingResult.addError(new ObjectError("dataInizio", "Le date inserite no vanno bene!"));
+
+		if (!eventoForm.getDataInizio().isEmpty() && !eventoForm.getDataFine().isEmpty()) {
+			if (eventoService.isValidData(LocalDateTime.parse(eventoForm.getDataInizio()),
+					LocalDateTime.parse(eventoForm.getDataFine()))) {
+				bindingResult.addError(new ObjectError("dataInizio", "Le date inserite non vanno bene!"));
+			}
+			if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm, id)) {
+				bindingResult.addError(new ObjectError("dataInizio", "Location gi� occupata in questa data!"));
+			}
 		}
-		
-		if (eventoService.isValidLocation(eventoService.findAllSortedByName(), eventoForm, id)) {
-			bindingResult.addError(new ObjectError("dataInizio", "Location già occupata in questa data!"));
-		}
-		
+
 		if (bindingResult.hasErrors()) {
+			model.addAttribute("eventoForm", eventoService.getById(id).toEventoForm());
 			ritornoErrori(model);
 			model.addAttribute("edit", true);
 			return "/admin/create";
 		}
-		
+
 		try {
 			eventoService.update(eventoForm, eventoService.getById(id));
 		} catch (IOException e) {
@@ -191,12 +226,10 @@ public class MainController {
 		return "redirect:/eventi/admin";
 	}
 
-	
-
 	// delete
 	@GetMapping("/admin/delete/{id}")
 	public String doDelete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-		if(eventoService.getById(id).isPubblicato()) {
+		if (eventoService.getById(id).isPubblicato()) {
 			redirectAttributes.addFlashAttribute("message", "Impossibile cancellare");
 			return "redirect:/eventi/admin";
 		}
@@ -204,8 +237,8 @@ public class MainController {
 		eventoService.deleteById(id);
 		return "redirect:/eventi/admin";
 	}
-	
-	//pubblica
+
+	// pubblica
 	@GetMapping("/admin/pubblica/{id}")
 	public String doPubblica(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
 		eventoService.getById(id).setPubblicato(true);
@@ -213,8 +246,8 @@ public class MainController {
 		redirectAttributes.addFlashAttribute("message", "Evento pubblicato correttamente");
 		return "redirect:/eventi/admin";
 	}
-	
-	//annulla evento pubblicato
+
+	// annulla evento pubblicato
 	@GetMapping("/admin/annulla/{id}")
 	public String doAnnulla(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
 		eventoService.getById(id).setAnnullato(true);
@@ -222,7 +255,7 @@ public class MainController {
 		redirectAttributes.addFlashAttribute("message", "Evento annullato correttamente");
 		return "redirect:/eventi/admin";
 	}
-	
+
 	private void ritornoErrori(Model model) {
 		model.addAttribute("listLoc", locationService.findAllSortedByName());
 		model.addAttribute("listCat", categoriaService.findAllSortedByName());

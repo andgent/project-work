@@ -13,18 +13,22 @@
 	<div class="m-3">
 
 		<h1>Crea nuova location</h1>
-
+		<a class="btn btn-primary" href="#table">Vai all'elenco</a>
 	</div>
 
-	<div class="alert alert-error alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
+	<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${message != null}">
+		<span th:text="${message}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+	<div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${errorMessage != null}">
 		<span th:text="${errorMessage}"></span>
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
-	
-	<div class="m-3 col-11">
+
+	<div class="m-3">
 
 		<form id="evento-form" th:object="${location}" th:action="@{/eventi/admin/createLocation}" method="post">
-			<div class="mb-3">
+			<div class="mb-3 w-25">
 				<label for="nome" class="form-label">Nome</label>
 				<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control" id="nome">
 				<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
@@ -33,7 +37,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="mb-3">
+			<div class="mb-3 w-25">
 				<label for="capienza" class="form-label">Capienza</label>
 				<input th:field="*{capienza}" th:errorClass="is-invalid" type="number" class="form-control"
 					id="capienza">
@@ -43,7 +47,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="mb-3">
+			<div class="mb-3 w-25">
 				<label for="citta" class="form-label">Città</label>
 				<input th:field="*{citta}" th:errorClass="is-invalid" type="text" class="form-control" id="citta">
 				<div th:if="${#fields.hasErrors('citta')}" class="invalid-feedback">
@@ -52,18 +56,37 @@
 					</ul>
 				</div>
 			</div>
-			<div class="mb-3">
+			<div class="mb-3 w-25">
 				<label for="regione" class="form-label">Regione</label>
-				<input th:field="*{regione}" th:errorClass="is-invalid" type="text" class="form-control" id="regione">
-				<div th:if="${#fields.hasErrors('regione')}" class="invalid-feedback">
-					<ul>
-						<li th:each="err : ${#fields.errors('regione')}" th:text="${err}" class="text-danger"></li>
-					</ul>
-				</div>
+				<select class="form-select" th:name="filtroRegione" aria-label="location" th:field="*{regione}">
+					<option value="Abruzzo">Abruzzo</option>
+					<option value="Basilicata">Basilicata</option>
+					<option value="Calabria">Calabria</option>
+					<option value="Campania">Campania</option>
+					<option value="Emilia-Romagna">Emilia-Romagna</option>
+					<option value="Friuli Venezia Giulia">Friuli Venezia
+						Giulia</option>
+					<option value="Lazio">Lazio</option>
+					<option value="Liguria">Liguria</option>
+					<option value="Lombardia">Lombardia</option>
+					<option value="Marche">Marche</option>
+					<option value="Molise">Molise</option>
+					<option value="Piemonte">Piemonte</option>
+					<option value="Puglia">Puglia</option>
+					<option value="Sardegna">Sardegna</option>
+					<option value="Sicilia">Sicilia</option>
+					<option value="Toscana">Toscana</option>
+					<option value="Trentino-Alto Adige">Trentino-Alto
+						Adige</option>
+					<option value="Umbria">Umbria</option>
+					<option value="Valle d'Aosta">Valle d'Aosta</option>
+					<option value="Veneto">Veneto</option>
+				</select>
 			</div>
-			<div class="mb-3">
+			<div class="mb-3 w-25">
 				<label for="indirizzo" class="form-label">Indirizzo</label>
-				<input th:field="*{indirizzo}" th:errorClass="is-invalid" type="text" class="form-control" id="indirizzo">
+				<input th:field="*{indirizzo}" th:errorClass="is-invalid" type="text" class="form-control"
+					id="indirizzo">
 				<div th:if="${#fields.hasErrors('indirizzo')}" class="invalid-feedback">
 					<ul>
 						<li th:each="err : ${#fields.errors('indirizzo')}" th:text="${err}" class="text-danger"></li>
@@ -71,13 +94,15 @@
 				</div>
 			</div>
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" th:field="*{openSpace}" th:value="true">
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+					th:field="*{openSpace}" th:value="true">
 				<label class="form-check-label" for="flexRadioDefault1">
 					Location all'aperto
 				</label>
 			</div>
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" th:field="*{openSpace}" th:value="false" checked>
+				<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+					th:field="*{openSpace}" th:value="false" checked>
 				<label class="form-check-label" for="flexRadioDefault2">
 					Location al chiuso
 				</label>
@@ -88,10 +113,10 @@
 
 	</div>
 
-	<table class="table table-striped m-3">
+	<table class="table table-striped m-3" id="table">
 		<thead>
 			<tr>
-				<th class="col-2" scope="col">Nome</th >
+				<th class="col-2" scope="col">Nome</th>
 				<th class="col-2" scope="col">Posti</th>
 				<th class="col-2" scope="col">Città</th>
 				<th class="col-2" scope="col">Regione</th>

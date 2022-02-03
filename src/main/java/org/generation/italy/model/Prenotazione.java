@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+
 
 @Entity
 public class Prenotazione {
@@ -19,18 +19,18 @@ public class Prenotazione {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotEmpty(message = "Il campo \"nome\" ï¿½ obbligatorio!")
+	@NotEmpty(message = "Il campo \"nome\" è obbligatorio!")
 	private String nome;
 	
-	@NotEmpty(message = "Il campo \"cognome\" ï¿½ obbligatorio!")
+	@NotEmpty(message = "Il campo \"cognome\" è obbligatorio!")
 	private String cognome;
 	
 	private LocalDateTime dataPrenotazione;
 	
-	@NotEmpty(message = "Il campo \"email\" ï¿½ obbligatorio!")
+	@NotEmpty(message = "Il campo \"email\" è obbligatorio!")
 	private String email;
 	
-	@NotNull
+	
 	@Positive
 	@Max(value=10, message="Si possono prenotare al massimo 10 biglietti alla volta")
 	private Integer numeroPrenotati;
@@ -54,11 +54,15 @@ public class Prenotazione {
 		this.dataPrenotazione = dataPrenotazione;
 	}
 
+
 	public Integer getNumeroPrenotati() {
+		if (numeroPrenotati == null) {
+			return 0;
+		}
 		return numeroPrenotati;
 	}
 
-	public void setNumeroPrenotati(Integer numeroPrenotati) {
+	public void setNumeroPrenotati(int numeroPrenotati) {
 		this.numeroPrenotati = numeroPrenotati;
 	}
 

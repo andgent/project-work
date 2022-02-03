@@ -32,13 +32,14 @@ public class CategorieController {
 
 		@PostMapping("/admin/createCategory")
 		public String doCreateCategoria(@Valid @ModelAttribute("categoria") Categoria categoria,
-				BindingResult bindingResult, Model model) {
+				BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
 			if (bindingResult.hasErrors()) {
-				model.addAttribute("listCat", categoriaService.findAllSortedByName());
+				model.addAttribute("listCat", categoriaService.findAllSortedByName());			
 				return "/admin/createCategory";
 			}
 			categoriaService.save(categoria);
-			return "redirect:/eventi/admin";
+			redirectAttributes.addFlashAttribute("message", "Categoria creata con successo!");
+			return "redirect:/eventi/admin/createCategory";
 		}
 		
 		@GetMapping("/admin/delete/cat/{id}")
@@ -48,6 +49,7 @@ public class CategorieController {
 				return "redirect:/eventi/admin/createCategory";
 			}
 			categoriaService.deleteById(id);
+			redirectAttributes.addFlashAttribute("message", "Categoria eliminata con successo!");
 			return "redirect:/eventi/admin/createCategory";
 		}
 	

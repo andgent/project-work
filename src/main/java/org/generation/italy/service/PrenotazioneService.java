@@ -13,7 +13,6 @@ public class PrenotazioneService {
 	@Autowired
 	private PrenotazioneRepository repository;
 	
-		
 	
 	public Prenotazione save(Prenotazione prenotati) {
 		return repository.save(prenotati);

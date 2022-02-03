@@ -2,28 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous">
-<link rel="stylesheet" href="/stylesheet.css">
-<link rel="stylesheet" href="/navbar.css">
-<link rel="stylesheet" href="/locandinadettagli.css">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
-	rel="stylesheet">
-<link
-	href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Russo+One&display=swap"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-<title>Dettagli evento</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+	<link rel="stylesheet" href="/stylesheet.css">
+	<link rel="stylesheet" href="/navbar.css">
+	<link rel="stylesheet" href="/locandinadettagli.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&family=Russo+One&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+	<title>Dettagli evento</title>
 </head>
 
 <body>
@@ -32,36 +24,39 @@
 		<div class="container-fluid">
 			<a class="navbar-brand titolo" id="navbar-brand" href="#">Gestore
 				Eventi</a>
-			<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-				aria-controls="navbarSupportedContent" aria-expanded="false"
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
 				aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link active home"
-						id="navbar-brand" aria-current="page" href="/index.html"><span>&nbsp;
+					<li class="nav-item"><a class="nav-link active home" id="navbar-brand" aria-current="page"
+							th:href="@{/eventi/}"><span>&nbsp;
 								&nbsp;</span>Home</a></li>
 				</ul>
-				<form class="d-flex ricercaspazio" th:action="@{/eventi/}"
-					method="get">
-					<input th:name="keyword" th:value="${keyword}"
-						class="form-control me-2" type="search"
+				<form class="d-flex ricercaspazio" th:action="@{/eventi/}" method="get">
+					<input th:name="keyword" th:value="${keyword}" class="form-control me-2" type="search"
 						placeholder="Cerca per evento" aria-label="Search">
 					<button class="btn" id="bottonericerca" type="submit">Ricerca</button>
 				</form>
 			</div>
 		</div>
 	</nav>
+	<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${message != null}">
+		<span th:text="${message}"></span>
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
 	<div class="d-flex">
 		<div class="col px-3" id="boxlocandina">
-			<img th:src="|/eventi/dettagli/${evento.id}/photo|" class="locandina"
-				th:alt="${evento.nome}">
+			<img th:src="|/eventi/dettagli/${evento.id}/photo|" class="locandina" th:alt="${evento.nome}">
 		</div>
 		<div class="col pt-3 text-light">
 			<h1 th:text="${evento.nome}"></h1>
 			<span th:text="${evento.categorieString()}"></span>
+			<div class="d-flex etichetta" th:if="${evento.isAnnullato()}"><span
+					class="mt-2 badge bg-danger">Annullato</span>
+			</div>
 			<p class="fw-bold fs-4 pt-5 text-decoration-underline titolini">Data
 				e ora</p>
 			<p>
@@ -75,9 +70,9 @@
 				<span th:text="${evento.location.getNome()}"></span> - <span
 					th:text="${evento.location.getIndirizzo()}"></span>, <span
 					th:text="${evento.location.getCitta()}"></span><br> <span
-					th:if="${evento.location.isOpenSpace()}">All'aperto</span>
+					th:if="${evento.location.getOpenSpace()}">All'aperto</span>
 			</p>
-			<span th:unless="${evento.location.isOpenSpace()}">Al chiuso</span>
+			<span th:unless="${evento.location.getOpenSpace()}">Al chiuso</span>
 			</p>
 			<p class="fw-bold fs-4 text-decoration-underline titolini">Descrizione</p>
 			<p class="me-5" th:text="${evento.descrizione}"></p>
@@ -88,41 +83,88 @@
 			<p class="fw-bold fs-4 text-decoration-underline titolini">Posti
 				disponibili</p>
 			<p th:text="${postiDisponibili}"></p>
-			<a href="#bottoneprenotazione"><button
-					class="btn mt-4 text-uppercase" id="bottonericerca">prenota
+			<a th:unless="${evento.isAnnullato || postiDisponibili == 0}" href="#bottoneprenotazione"><button class="btn mt-4 text-uppercase"
+					id="bottonericerca">prenota
 					ora</button></a>
+			<a th:href="@{/eventi/}"><button class="btn mt-4 text-uppercase" id="bottonericerca">Torna alla
+					home</button></a>
 		</div>
 	</div>
-	<h1 class="text-uppercase mt-5 text-center">prenota</h1>
-	<form>
+
+
+
+
+	<form th:unless="${evento.isAnnullato || postiDisponibili == 0} " id="prenotazione" th:object="${prenotazione}"
+		th:action="@{/eventi/dettagli/{id}(id=${evento.id})}" method="post">
+
+		<h1 class="text-uppercase mt-5 text-center">prenota</h1>
+
 		<div class="mb-3 d-flex justify-content-center text-light">
 			<div class="col-4 mx-3">
-				<label for="nome" class="form-label px-2">Nome</label> <input
-					type="text" class="form-control px-2" id="nome">
+				<label for="nome" class="form-label px-2">Nome</label>
+				<input th:field="*{nome}" th:errorClass="is-invalid" type="text" class="form-control px-2" id="nome">
+				<div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('nome')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+
 			</div>
-			<div class="col-4">
-				<label for="cognome" class="form-label px-2">Cognome</label> <input
-					type="text" class="form-control px-2" id="cognome">
+
+			<div class="col-4 ">
+				<label for="cognome" class="form-label px-2">Cognome</label>
+				<input th:field="*{cognome}" th:errorClass="is-invalid" type="text" class="form-control px-2"
+					id="cognome">
+				<div th:if="${#fields.hasErrors('cognome')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('cognome')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+
 			</div>
+
 		</div>
-		<div
-			class="d-flex justify-content-center text-light align-items-center">
+
+		<div class="d-flex justify-content-center text-light align-items-center">
 			<div class="col-4">
-				<label for="exampleInputEmail1" class="form-label text-light px-2">Email</label>
-				<input type="email" class="form-control px-2"
-					id="exampleInputEmail1" aria-describedby="emailHelp">
+				<label for="email" class="form-label text-light px-2">Email</label>
+				<input th:field="*{email}" type="email" th:errorClass="is-invalid" class="form-control px-2" id="email"
+					aria-describedby="emailHelp">
+				<div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('email')}" th:text="${err}" class="text-danger"></li>
+					</ul>
+				</div>
+
+
+
 			</div>
 
 		</div>
 		<div class="d-flex justify-content-center text-light mt-3">
 			<div class="col-1">
-				<label for="numeroposti" class="px-2">Numero biglietti</label> <input
-					type="number" class="form-control" id="numeroposti">
+				<label for="numeroPrenotati" class="px-2">Numero biglietti</label>
+				<input th:field="*{numeroPrenotati}" th:errorClass="is-invalid" type="number" class="form-control"
+					id="numeroPrenotati">
+				<div th:if="${#fields.hasErrors('numeroPrenotati')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('numeroPrenotati')}" th:text="${err}" class="text-danger">
+						</li>
+					</ul>
+				</div>
+				<div th:if="${#fields.hasErrors('dataPrenotazione')}" class="invalid-feedback">
+					<ul>
+						<li th:each="err : ${#fields.errors('dataPrenotazione')}" th:text="${err}" class="text-danger">
+						</li>
+					</ul>
+				</div>
+
+
 			</div>
+
 		</div>
 		<div class="d-flex justify-content-center mb-5">
-			<a href="#contact"><button class="btn mt-4 text-uppercase"
-					id="bottoneprenotazione">prenota</button></a>
+			<a href="#contact"><button class="btn mt-4 text-uppercase" id="bottoneprenotazione">prenota</button></a>
 		</div>
 	</form>
 
@@ -131,13 +173,11 @@
 		<div class="text-light text-center mb-2">
 			<hr>
 			<span>GenerationEvents&#169; &nbsp; &#124; &nbsp; Via Pinco
-				Pallino Developer, 42 &nbsp; &#124; &nbsp;</span> <a href="#"
-				class="colore me-3"><i class="bi bi-facebook"></i></a> <a href="#"
-				class="colore me-3"><i class="bi bi-instagram"></i></a> <a href="#"
-				class="colore me-3"><i class="bi bi-snapchat"></i></a> <a href="#"
-				class="colore me-3"><i class="bi bi-twitter"></i></a> <a href="#"
-				class="colore me-3"><i class="bi bi-linkedin"></i></a> <a href="#"
-				class="colore me-3"><i class="bi bi-youtube"></i></a>
+				Pallino Developer, 42 &nbsp; &#124; &nbsp;</span> <a href="#" class="colore me-3"><i
+					class="bi bi-facebook"></i></a> <a href="#" class="colore me-3"><i class="bi bi-instagram"></i></a>
+			<a href="#" class="colore me-3"><i class="bi bi-snapchat"></i></a> <a href="#" class="colore me-3"><i
+					class="bi bi-twitter"></i></a> <a href="#" class="colore me-3"><i class="bi bi-linkedin"></i></a> <a
+				href="#" class="colore me-3"><i class="bi bi-youtube"></i></a>
 		</div>
 	</footer>
 </body>

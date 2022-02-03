@@ -74,6 +74,10 @@ public class EventoService {
 		return repository.findByRegione(filtroRegione);
 	}
 	
+	//filtro per openSpace
+	public List<Evento> findByOpenSpace(Boolean filtroOpenSpace){
+		return repository.findByOpenSpace(filtroOpenSpace);
+	}
 	// controllo se ci sono eventi con la stessa location
 	public boolean isValidLocation(List<Evento> eventList, EventoForm form, Integer id) {
 		boolean ok;
@@ -135,7 +139,7 @@ public class EventoService {
         evento.setModificato(false);
         evento.setAnnullato(false);
         evento.setPubblicato(false);
-        if(eventoForm.getLocandina() != null) {
+        if(eventoForm.getLocandina() != null && !eventoForm.getLocandina().isEmpty()) {
             evento.setLocandina(eventoForm.getLocandina().getBytes());
         }
         return repository.save(evento);
@@ -153,11 +157,18 @@ public class EventoService {
             evento.setLocation(eventoForm.getLocation());
             evento.setDataInizio(LocalDateTime.parse(eventoForm.getDataInizio()));
             evento.setDataFine(LocalDateTime.parse(eventoForm.getDataFine()));
-            if(eventoForm.getLocandina() != null) {
+            if(eventoForm.getLocandina() != null && !eventoForm.getLocandina().isEmpty()) {
                 evento.setLocandina(eventoForm.getLocandina().getBytes());
             }
             return repository.save(evento);
            
     }
+        public boolean isFuturo(String data) {
+        	LocalDateTime d= LocalDateTime.parse(data);
+        	if(d.isBefore(LocalDateTime.now())) {
+        		return false;
+        	}
+        	return true;
+        }
 
 }

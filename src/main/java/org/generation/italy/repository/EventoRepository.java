@@ -32,4 +32,9 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 			 +"where l.regione = ?", nativeQuery = true)
 	List<Evento> findByRegione(String regione);
 	 
+	 @Query(value="select e.*\r\n"
+			 +"from evento e \r\n"
+			 +"join location l on e.location_id = l.id\r\n"
+			 +"where l.open_space = ?", nativeQuery = true)
+	 List<Evento> findByOpenSpace(Boolean openSpace);
 }

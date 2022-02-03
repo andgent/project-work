@@ -171,17 +171,19 @@ public class Evento {
 	  }
 
 	// riporta un eventoForm a partire da un evento
-		public EventoForm toEventoForm() {
-			EventoForm eventoForm = new EventoForm();
-			eventoForm.setId(id);
-			eventoForm.setCategorie(categorie);
-			eventoForm.setBiglietto(biglietto);
-			eventoForm.setDataFine(fineToString());
-			eventoForm.setDataInizio(inizioToString());
-			eventoForm.setDescrizione(descrizione);
-			eventoForm.setNome(nome);
-			return eventoForm;
-		}
+	  public EventoForm toEventoForm() {
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm");
+          EventoForm eventoForm = new EventoForm();
+          eventoForm.setId(id);
+          eventoForm.setCategorie(categorie);
+          eventoForm.setBiglietto(biglietto);
+          eventoForm.setDataFine(dataFine.format(formatter));
+          eventoForm.setDataInizio(dataInizio.format(formatter));
+          eventoForm.setDescrizione(descrizione);
+          eventoForm.setNome(nome);
+          eventoForm.setLocation(location);
+          return eventoForm;
+      }
 
 		public boolean isPubblicato() {
 			return pubblicato;

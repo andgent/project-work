@@ -32,7 +32,7 @@ public class Location {
 	@Positive(message = "Il campo \"capienza\" accetta solo numeri interi positivi!")
 	private int capienza;
 	
-	private boolean openSpace;
+	private Boolean openSpace;
 	
 	//Relazioni
 	@OneToMany
@@ -95,12 +95,14 @@ public class Location {
 		this.id = id;
 	}
 
-	public boolean isOpenSpace() {
+	public Boolean getOpenSpace() {
 		return openSpace;
 	}
 
-	public void setOpenSpace(boolean openSpace) {
+	public void setOpenSpace(Boolean openSpace) {
 		this.openSpace = openSpace;
 	}
+
+	
 
 } 

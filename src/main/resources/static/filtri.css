@@ -128,4 +128,5 @@ ul.ks-cboxtags li input[type="checkbox"] {
 	border: rgba(255,0,0,0.7) 2px solid;
 	font-weight: bold;
 	text-transform: uppercase;
+	width: 95%;
 }

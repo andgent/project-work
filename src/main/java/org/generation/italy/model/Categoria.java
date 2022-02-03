@@ -15,7 +15,7 @@ public class Categoria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotEmpty(message = "Il campo \"nome\" non può essere vuoto!")
+	@NotEmpty(message = "Il campo \"nome\" non puo essere vuoto!")
 	private String nome;
 
 	// Getters and Setters
