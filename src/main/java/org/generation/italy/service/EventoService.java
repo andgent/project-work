@@ -163,6 +163,7 @@ public class EventoService {
             return repository.save(evento);
            
     }
+        
         public boolean isFuturo(String data) {
         	LocalDateTime d= LocalDateTime.parse(data);
         	if(d.isBefore(LocalDateTime.now())) {

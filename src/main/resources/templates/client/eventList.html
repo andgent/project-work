@@ -71,13 +71,14 @@
 
 
 
-							<div class="d-flex justify-content-center etichetta"><span th:if="${item.isAnnullato()}"
-									class="m-2 badge bg-danger">Annullato</span><span class="m-2 badge bg-success"
-									th:if="${service.calcolaPosti(item) !=  0}" th:unless="${item.isAnnullato()}" id="etichetta">Posti
-									disponibili</span>
+							<div class="d-flex justify-content-center etichetta">
+							<span th:if="${item.isAnnullato()}" class="m-2 badge bg-danger">Annullato</span>
+							<span class="m-2 badge bg-success" th:if="${service.calcolaPosti(item) !=  0}" 
+								th:unless="${item.isAnnullato() || !eventoService.isFuturo(item.getDataFine().toString())}" id="etichetta">Posti disponibili</span>
 								<span th:if="${item.isModificato()}" th:unless="${item.isAnnullato()}"
 									class="m-2 badge bg-primary">Modificato</span>
-									<span class="m-2 badge bg-danger" th:if="${service.calcolaPosti(item) == 0}" id="etichetta">Posti Esauriti</span>
+									<span class="m-2 badge bg-danger" th:if="${service.calcolaPosti(item) == 0 && eventoService.isFuturo(item.getDataFine().toString())}" id="etichetta">Posti Esauriti</span>
+									<span th:if="${!eventoService.isFuturo(item.getDataFine().toString())}" class="m-2 badge bg-danger">Evento Passato</span>
 							</div>
 							<div class="slide slide1">
 								<div class="content">
@@ -90,11 +91,12 @@
 							<div class="slide slide2 bg-light">
 								<div class="content mt-5">
 									<h3 th:text="${item.nome}"></h3>
-									<blockquote class="blockquote">
-										<p class="description" th:text="${item.descrizione}"></p>
-									</blockquote>
+									
+										<p class="description" th:text="|Dal: ${item.inizioToString()}|"></p>
+										<p class="description" th:text="|Al: ${item.fineToString()}|"></p>
+										<p class="description" th:text="|Prezzo: ${item.getBiglietto()}€|"></p>
 									<div class="d-flex justify-content-center">
-										<a class="btn btn-dark mb-5" role="button"
+										<a class="btn btn-dark my-3" role="button"
 											th:href="@{|/eventi/dettagli/${item.id}|}">Dettagli</a>
 									</div>
 								</div>
@@ -168,18 +170,7 @@
 									<option value="Veneto">Veneto</option>
 								</select>
 							</div>
-							<div class="row pb-5">
-								<h5 id="filtri">Filtra per:</h5>
-								<div class="container">
-									<ul class="ks-cboxtags">
-										<li><input type="checkbox" id="indoor" th:value="false" th:name="filtroOpenSpace"><label
-												for="indoor">Al
-												chiuso</label></li>
-										<li><input type="checkbox" id="outdoor" th:value="true" th:name="filtroOpenSpace"><label
-												for="outdoor">All'aperto</label></li>
-									</ul>
-								</div>
-									</div>
+							
 									<button class="btn btn-danger my-5" type="submit">Invia</button>
 								</div>
 							</div>

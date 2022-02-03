@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<div th:replace="fragments/resources :: headTags"></div>
+	<title>Eventi</title>
+</head>
+
+<nav th:replace="fragments/navbar"></nav>
+
+<body>
+	<h1>Eventi Passati</h1>
+
+	<div th:replace="fragments/resources :: scripts"></div>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Nome</th>
+				<th scope="col">Location</th>
+				<th scope="col">Categoria</th>
+				<th scope="col">Data di inizio</th>
+				<th scope="col">Data di fine</th>
+				<th scope="col">Prezzo</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="item : ${listEve}" th:if="${!service.isFuturo(item.getDataFine().toString())}">
+				<td th:text="${item.id}"></td>
+				<th th:text="${item.nome}"></th>
+				<td th:text="${item.location.getNome()}"></td>
+				<td th:text="${item.categorieString()}"></td>
+				<td th:text="${item.inizioToString()}"></td>
+				<td th:text="${item.fineToString()}"></td>
+				<td th:text="${item.biglietto}">
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+
+</html>

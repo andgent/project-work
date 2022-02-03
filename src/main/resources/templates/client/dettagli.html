@@ -83,7 +83,7 @@
 			<p class="fw-bold fs-4 text-decoration-underline titolini">Posti
 				disponibili</p>
 			<p th:text="${postiDisponibili}"></p>
-			<a th:unless="${evento.isAnnullato || postiDisponibili == 0}" href="#bottoneprenotazione"><button class="btn mt-4 text-uppercase"
+			<a th:unless="${evento.isAnnullato || postiDisponibili == 0 || !eventoService.isFuturo(evento.getDataFine().toString())}" href="#bottoneprenotazione"><button class="btn mt-4 text-uppercase"
 					id="bottonericerca">prenota
 					ora</button></a>
 			<a th:href="@{/eventi/}"><button class="btn mt-4 text-uppercase" id="bottonericerca">Torna alla
@@ -94,7 +94,7 @@
 
 
 
-	<form th:unless="${evento.isAnnullato || postiDisponibili == 0} " id="prenotazione" th:object="${prenotazione}"
+	<form th:unless="${evento.isAnnullato || postiDisponibili == 0 || !eventoService.isFuturo(evento.getDataFine().toString())} " id="prenotazione" th:object="${prenotazione}"
 		th:action="@{/eventi/dettagli/{id}(id=${evento.id})}" method="post">
 
 		<h1 class="text-uppercase mt-5 text-center">prenota</h1>

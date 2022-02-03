@@ -84,6 +84,7 @@ public class MainController {
 		model.addAttribute("listLoc", locationService.findAllSortedByName());
 		model.addAttribute("list", result);
 		model.addAttribute("service", prenotazioneService);
+		model.addAttribute("eventoService", eventoService);
 		return "/client/eventList";
 	}
 
@@ -93,6 +94,7 @@ public class MainController {
 		model.addAttribute("evento", eventoService.getById(id));
 		model.addAttribute("postiDisponibili", prenotazioneService.calcolaPosti(eventoService.getById(id)));
 		model.addAttribute("prenotazione", new Prenotazione());
+		model.addAttribute("eventoService", eventoService);
 		return "/client/dettagli";
 	}
 
@@ -255,6 +257,14 @@ public class MainController {
 		redirectAttributes.addFlashAttribute("message", "Evento annullato correttamente");
 		return "redirect:/eventi/admin";
 	}
+	
+	// pagina eventi passati
+	@GetMapping ("/admin/eventiPassati")
+    public String eventiPassati(Model model) {
+        model.addAttribute("listEve", eventoService.findAllSortedByName());
+        model.addAttribute("service", eventoService);
+        return "/admin/adminPastEventList";
+    }
 
 	private void ritornoErrori(Model model) {
 		model.addAttribute("listLoc", locationService.findAllSortedByName());
